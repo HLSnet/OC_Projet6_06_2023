@@ -1,0 +1,84 @@
+package com.openclassrooms.projet6.paymybuddy.model;
+
+
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+public class Connection {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int userId;
+
+    private String email;
+
+    private String password;
+
+    @OneToOne(mappedBy = "connection",  cascade = CascadeType.ALL
+    )
+    private PmbAccount pmbAccount;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "connection_buddies",
+               joinColumns = @JoinColumn(name = "connection_id"),
+               inverseJoinColumns = @JoinColumn(name = "connection_id1")
+              )
+    private List<Connection> buddiesConnected;
+
+    @ManyToMany(mappedBy = "buddiesConnected",
+                fetch = FetchType.LAZY)
+    private List<Connection> buddiesConnector;
+
+    
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public PmbAccount getPmbAccount() {
+        return pmbAccount;
+    }
+
+    public void setPmbAccount(PmbAccount pmbAccount) {
+        this.pmbAccount = pmbAccount;
+    }
+
+    public List<Connection> getBuddiesConnected() {
+        return buddiesConnected;
+    }
+
+    public void setBuddiesConnected(List<Connection> buddiesConnected) {
+        this.buddiesConnected = buddiesConnected;
+    }
+
+    public List<Connection> getBuddiesConnector() {
+        return buddiesConnector;
+    }
+
+    public void setBuddiesConnector(List<Connection> buddiesConnector) {
+        this.buddiesConnector = buddiesConnector;
+    }
+
+}
