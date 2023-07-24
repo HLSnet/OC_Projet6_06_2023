@@ -1,32 +1,44 @@
 package com.openclassrooms.projet6.paymybuddy;
 
-import com.openclassrooms.projet6.paymybuddy.dto.ConnectionDto;
-import com.openclassrooms.projet6.paymybuddy.dto.PmbAccountDto;
-import com.openclassrooms.projet6.paymybuddy.service.ConnectionService;
+import com.openclassrooms.projet6.paymybuddy.model.Connection;
+import com.openclassrooms.projet6.paymybuddy.repository.ConnectionRepository;
+import com.openclassrooms.projet6.paymybuddy.repository.PmbAccountRepository;
 import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
-import com.openclassrooms.projet6.paymybuddy.service.PmbAccountService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+import java.util.Optional;
+
 @SpringBootApplication
+
 public class PaymybuddyApplication implements CommandLineRunner {
-
-	@Autowired
-	private ConnectionService connectionService;
-
-	@Autowired
-	private PmbAccountService pmbAccountService;
+//
+//	@Autowired
+//	private ConnectionService connectionService;
+//
+//	@Autowired
+//	private PmbAccountService pmbAccountService;
 
 	@Autowired
 	private PayMyBuddyService payMyBuddyServiceImpl;
+
+	@Autowired
+	private PmbAccountRepository pmbAccountRepository;
+
+	@Autowired
+	private ConnectionRepository connectionRepository;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(PaymybuddyApplication.class, args);
 	}
 
 	@Override
+	@Transactional
 	public void run(String... args) throws Exception {
 //		for (ConnectionDto connectionDto: connectionService.getConnections())
 //		{
@@ -53,6 +65,20 @@ public class PaymybuddyApplication implements CommandLineRunner {
 //			System.out.println(buddyConnection.getEmail() + "  " + buddyConnection.getPassword());
 //		}
 //
+
+//
+//		Connection newConnection = new Connection();
+//        String emailNewConnection= "user10@gmail.com";
+//        String passwordNewConnection= "pwd10";
+//        newConnection.setEmail(emailNewConnection);
+//        newConnection.setPassword(passwordNewConnection);
+//
+//		PmbAccount newPmbAccount = new PmbAccount();
+//
+//		Connection connection = connectionRepository.save(newConnection);
+//		newPmbAccount.setConnection(connection);
+//		connection.setPmbAccount(newPmbAccount);
+
 
 	}
 }

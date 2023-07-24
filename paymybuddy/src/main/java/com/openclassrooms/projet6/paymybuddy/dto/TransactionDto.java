@@ -1,30 +1,18 @@
-package com.openclassrooms.projet6.paymybuddy.model;
+package com.openclassrooms.projet6.paymybuddy.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicUpdate;
+import com.openclassrooms.projet6.paymybuddy.model.PmbAccount;
 
 
-@Entity
-@Table(name = "transaction")
-@DynamicUpdate
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class TransactionDto {
     private int transactionId;
 
     private float amount;
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "pmb_account_id" )
     private PmbAccount pmbAccountSender;
 
-    @ManyToOne
-    @JoinColumn(name = "pmb_account_id1")
     private PmbAccount pmbAccountReceiver;
-
 
     public int getTransactionId() {
         return transactionId;

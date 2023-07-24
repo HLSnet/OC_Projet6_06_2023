@@ -1,44 +1,57 @@
 package com.openclassrooms.projet6.paymybuddy.model;
 
-
 import jakarta.persistence.*;
-
+import org.hibernate.annotations.DynamicUpdate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "connection")
+@DynamicUpdate
 public class Connection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int userId;
+    private int connectionId;
 
     private String email;
 
     private String password;
 
-    @OneToOne(mappedBy = "connection",  cascade = CascadeType.ALL
-    )
+    @OneToOne(mappedBy = "connection",
+            cascade = { CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+             orphanRemoval = true
+             )
     private PmbAccount pmbAccount;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany( cascade = { CascadeType.PERSIST,
+                            CascadeType.MERGE
+                          }
+
+                )
     @JoinTable(name = "connection_buddies",
                joinColumns = @JoinColumn(name = "connection_id"),
                inverseJoinColumns = @JoinColumn(name = "connection_id1")
               )
-    private List<Connection> buddiesConnected;
+    private List<Connection> buddiesConnected= new ArrayList<>();
+
 
     @ManyToMany(mappedBy = "buddiesConnected",
-                fetch = FetchType.LAZY)
-    private List<Connection> buddiesConnector;
+                cascade = { CascadeType.PERSIST,
+                            CascadeType.MERGE
+                            }
+    )
+    private List<Connection> buddiesConnector= new ArrayList<>();
 
-    
 
-    public int getUserId() {
-        return userId;
+    public int getConnectionId() {
+        return connectionId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setConnectionId(int connectionId) {
+        this.connectionId = connectionId;
     }
 
     public String getEmail() {
@@ -81,4 +94,14 @@ public class Connection {
         this.buddiesConnector = buddiesConnector;
     }
 
+    public void addBuddyConnected(Connection newBuddyConnected){
+        buddiesConnected.add(newBuddyConnected);
+        newBuddyConnected.getBuddiesConnector().add(this);
+    }
+
+    public void removeBuddiesConnector(){
+        for (Connection connector : buddiesConnector) {
+            connector.getBuddiesConnected().remove(this);
+        }
+    }
 }

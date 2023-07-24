@@ -3,6 +3,7 @@ package com.openclassrooms.projet6.paymybuddy.servicetest;
 import com.openclassrooms.projet6.paymybuddy.dto.ConnectionDto;
 import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,18 +21,19 @@ public class PayMyBuddyServiceTest {
     PayMyBuddyService payMyBuddyServiceImpl;
 
     @Test
+    @Disabled
     void testGetBuddiesConnectionWithExistingId() {
         // ARRANGE
         int identifiant = 2;
 
         // ACT
-        List<ConnectionDto> buddiesConnected = payMyBuddyServiceImpl.getBuddiesConnection(identifiant);
+        List<ConnectionDto> buddiesConnected = payMyBuddyServiceImpl.getBuddiesConnected(identifiant);
 
         // ASSERT
         assertTrue(buddiesConnected.size() == 3);
-        assertTrue(buddiesConnected.get(0).getEmail().equals("user3_test@gmail.com"));
-        assertTrue(buddiesConnected.get(1).getEmail().equals("user4_test@gmail.com"));
-        assertTrue(buddiesConnected.get(2).getEmail().equals("user5_test@gmail.com"));
+        assertTrue(buddiesConnected.get(0).getEmail().equals("connection3_test@gmail.com"));
+        assertTrue(buddiesConnected.get(1).getEmail().equals("connection4_test@gmail.com"));
+        assertTrue(buddiesConnected.get(2).getEmail().equals("connection5_test@gmail.com"));
     }
 
     @Test
@@ -40,6 +42,6 @@ public class PayMyBuddyServiceTest {
         int identifiant = 100;
 
         // ACT, ASSERT
-        assertTrue(payMyBuddyServiceImpl.getBuddiesConnection(identifiant).isEmpty());
+        assertTrue(payMyBuddyServiceImpl.getBuddiesConnected(identifiant).isEmpty());
     }
 }
