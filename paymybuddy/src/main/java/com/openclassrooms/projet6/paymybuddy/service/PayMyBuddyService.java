@@ -1,22 +1,25 @@
 package com.openclassrooms.projet6.paymybuddy.service;
 
 
-import com.openclassrooms.projet6.paymybuddy.dto.ConnectionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
+import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
 import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
 
 
 import java.util.List;
 
 public interface PayMyBuddyService {
-    boolean register(int identifiant);
-    boolean logint(int identifiant);
-    boolean logout(int identifiant);
-    List<TransactionDto> getTransactions(int identifiant);
-    boolean addTransaction(TransactionDto transactionDto);
-    List<ConnectionDto> getBuddiesConnected(int identifiant);
-    ConnectionDto addConnection(ConnectionDto connectionDto);
-    boolean updateConnection(ConnectionDto connectionDto);
-    float getBalanceAccount();
-    String getContact();
-    public ConnectionDto getProfile(Integer id);
+
+    public float getBalanceAccount(int connectionId);
+    public List<TransactionDto> getTransactions(int connectionId);
+    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId);
+    public boolean addConnection(int connectionId, int  connectionBuddyId);
+    public boolean addTransaction(int connectionId, TransactionDto transactionDto);
+    public String getContact();
+    public ProfileDto getProfile(int connectionId);
+    public boolean updateProfile(ProfileDto profileDto);
+
+    public boolean register(int connectionId);
+    public boolean logint(int connectionId);
+    public boolean logout(int connectionId);
 }

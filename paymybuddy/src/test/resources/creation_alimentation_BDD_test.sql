@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `paymybuddy_db_test`.`connection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -83,8 +84,8 @@ DROP TABLE IF EXISTS `paymybuddy_db_test`.`connection_buddies` ;
 CREATE TABLE IF NOT EXISTS `paymybuddy_db_test`.`connection_buddies` (
   `connection_id` INT NOT NULL,
   `connection_id1` INT NOT NULL,
-  INDEX `fk_connection_has_connection_connection2_idx` (`connection_id1` ASC) VISIBLE,
   INDEX `fk_connection_has_connection_connection1_idx` (`connection_id` ASC) VISIBLE,
+  INDEX `fk_connection_has_connection_connection2_idx` (`connection_id1` ASC) VISIBLE,
   PRIMARY KEY (`connection_id`, `connection_id1`),
   CONSTRAINT `fk_connection_has_connection_connection1`
     FOREIGN KEY (`connection_id`)
@@ -106,6 +107,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 
+
 UNLOCK TABLES;
 
 USE `paymybuddy_db_test` ;
@@ -114,17 +116,17 @@ USE `paymybuddy_db_test` ;
 -- -----------------------------------------------------
 LOCK TABLES connection WRITE;
 
-INSERT INTO connection (email, password)
+INSERT INTO connection (email, password, name)
 VALUES 
-('connection1_test@gmail.com', 'pwd1'),
-('connection2_test@gmail.com', 'pwd2'),
-('connection3_test@gmail.com', 'pwd3'),
-('connection4_test@gmail.com', 'pwd4'),
-('connection5_test@gmail.com', 'pwd5'),
-('connection6_test@gmail.com', 'pwd6'),
-('connection7_test@gmail.com', 'pwd7'),
-('connection8_test@gmail.com', 'pwd8'),
-('connection9_test@gmail.com', 'pwd9');
+('connection1_test@gmail.com', 'pwd1', 'buddy1'),
+('connection2_test@gmail.com', 'pwd2', 'buddy2'),
+('connection3_test@gmail.com', 'pwd3', 'buddy3'),
+('connection4_test@gmail.com', 'pwd4', 'buddy4'),
+('connection5_test@gmail.com', 'pwd5', 'buddy5'),
+('connection6_test@gmail.com', 'pwd6', 'buddy6'),
+('connection7_test@gmail.com', 'pwd7', 'buddy7'),
+('connection8_test@gmail.com', 'pwd8', 'buddy8'),
+('connection9_test@gmail.com', 'pwd9', 'buddy9');
 
 UNLOCK TABLES;
 

@@ -145,8 +145,10 @@ public class ConnectionRepositoryIT {
         Connection newConnection = new Connection();
         String email= "connection10_test@gmail.com";
         String password= "pwd10";
+        String name= "buddy10";
         newConnection.setEmail(email);
         newConnection.setPassword(password);
+        newConnection.setName(name);
         PmbAccount pmbAccount = new PmbAccount();
         pmbAccount.saveConnection(newConnection);
 

@@ -18,6 +18,8 @@ public class Connection {
 
     private String password;
 
+    private String name;
+
     @OneToOne(mappedBy = "connection",
             cascade = { CascadeType.PERSIST,
                     CascadeType.MERGE
@@ -25,6 +27,8 @@ public class Connection {
              orphanRemoval = true
              )
     private PmbAccount pmbAccount;
+
+
 
     @ManyToMany( cascade = { CascadeType.PERSIST,
                             CascadeType.MERGE
@@ -49,7 +53,6 @@ public class Connection {
     public int getConnectionId() {
         return connectionId;
     }
-
     public void setConnectionId(int connectionId) {
         this.connectionId = connectionId;
     }
@@ -57,7 +60,6 @@ public class Connection {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -65,15 +67,20 @@ public class Connection {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PmbAccount getPmbAccount() {
         return pmbAccount;
     }
-
     public void setPmbAccount(PmbAccount pmbAccount) {
         this.pmbAccount = pmbAccount;
     }
@@ -81,7 +88,6 @@ public class Connection {
     public List<Connection> getBuddiesConnected() {
         return buddiesConnected;
     }
-
     public void setBuddiesConnected(List<Connection> buddiesConnected) {
         this.buddiesConnected = buddiesConnected;
     }
@@ -89,7 +95,6 @@ public class Connection {
     public List<Connection> getBuddiesConnector() {
         return buddiesConnector;
     }
-
     public void setBuddiesConnector(List<Connection> buddiesConnector) {
         this.buddiesConnector = buddiesConnector;
     }
