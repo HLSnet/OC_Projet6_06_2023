@@ -16,11 +16,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query(value = "SELECT transaction.* FROM transaction  LEFT JOIN  PMB_account ON transaction.PMB_account_id1 = PMB_account.connection_id WHERE PMB_account.connection_id = :id", nativeQuery = true)
     public List<Transaction>  findTransactionReceiversByConnectionId(@Param("id") Integer id);
 
-    @Query(value = "SELECT transaction.* FROM transaction  LEFT JOIN  PMB_account ON transaction.PMB_account_id = PMB_account.connection_id WHERE PMB_account.id = :id", nativeQuery = true)
-    public List<Transaction> findTransactionSendersByPmbAccountId(@Param("id") Integer id);
-
-    @Query(value = "SELECT transaction.* FROM transaction  LEFT JOIN  PMB_account ON transaction.PMB_account_id1 = PMB_account.connection_id WHERE PMB_account.id = :id", nativeQuery = true)
-    public List<Transaction>  findTransactionReceiversByPmbAccountId(@Param("id") Integer id);
+    @Query(value =  "SELECT transaction.* " +
+                    "FROM transaction " +
+                    "LEFT JOIN PMB_account " +
+                    "ON transaction.PMB_account_id = PMB_account.connection_id " +
+                    "WHERE transaction.PMB_account_id = :id "+
+                    "OR transaction.PMB_account_id1 = :id", nativeQuery = true)
+    public List<Transaction>  findTransactionsByConnectionId(@Param("id") Integer id);
 
 
 }

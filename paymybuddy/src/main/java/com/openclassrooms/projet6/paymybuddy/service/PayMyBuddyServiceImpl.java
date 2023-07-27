@@ -4,6 +4,8 @@ import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
 import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
 import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
 import com.openclassrooms.projet6.paymybuddy.model.Connection;
+import com.openclassrooms.projet6.paymybuddy.model.PmbAccount;
+import com.openclassrooms.projet6.paymybuddy.model.Transaction;
 import com.openclassrooms.projet6.paymybuddy.repository.ConnectionRepository;
 import com.openclassrooms.projet6.paymybuddy.repository.PmbAccountRepository;
 import com.openclassrooms.projet6.paymybuddy.repository.TransactionRepository;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.openclassrooms.projet6.paymybuddy.constants.Constants.COORDONNEES_CONTACT;
+import static com.openclassrooms.projet6.paymybuddy.constants.Constants.NON_EXISTING_ACCOUNT;
 
 
 @Service
@@ -32,23 +35,62 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
 
     @Override
     public float getBalanceAccount(int connectionId) {
-        return 0;
+        float balanceAccount = NON_EXISTING_ACCOUNT;
+
+        Optional<PmbAccount> pmbAccount = pmbAccountRepository.findByConnectionId(connectionId);
+        if (pmbAccount.isPresent()) {
+            balanceAccount= pmbAccount.get().getBalance();
+        }
+        return balanceAccount;
     }
 
     @Override
     public List<TransactionDto> getTransactions(int connectionId) {
-        return null;
+        List<TransactionDto> transactionDtos = new ArrayList<>();
+        List<Transaction> transactions = transactionRepository.findTransactionsByConnectionId(connectionId);
+
+
+        if (!transactions.isEmpty()) {
+            for (Transaction    transaction : transactions) {
+                TransactionDto transactionDto = new TransactionDto();
+
+                transactionDto.setConnectionId(connectionId);
+                transactionDto.setName(connectionRepository.findById(connectionId).get().getName());
+                transactionDto.setDescription(transaction.getDescription());
+                transactionDto.setAmount(transaction.getAmount());
+                transactionDtos.add(transactionDto);
+            }
+        }
+        return transactionDtos;
     }
 
     @Override
     public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
+        List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
 
-        return null;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+        if (optConnection.isPresent()) {
+            List<Connection> buddiesConnected = optConnection.get().getBuddiesConnected();
+            for (Connection connection : buddiesConnected) {
+                BuddyConnectedDto buddiesConnectedDto = new BuddyConnectedDto();
+                buddiesConnectedDto.setConnectionId(connection.getConnectionId());
+                buddiesConnectedDto.setName(connection.getName());
+                buddiesConnectedDtos.add(buddiesConnectedDto);
+            }
+        }
+        return buddiesConnectedDtos;
     }
 
     @Override
-    public boolean addConnection(int connectionId, int  connectionBuddyId) {
-        return false;
+    public boolean addBuddyConnected(int connectionId, int  connectionBuddyId) {
+        boolean result = false;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+
+        if (optConnection.isPresent()) {
+            optConnection.get().addBuddyConnected(connectionRepository.findById(connectionBuddyId).get());
+            result = true;
+        }
+        return result;
     }
 
     @Override

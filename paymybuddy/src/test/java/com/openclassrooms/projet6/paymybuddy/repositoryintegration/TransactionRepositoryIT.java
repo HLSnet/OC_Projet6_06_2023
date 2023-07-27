@@ -127,7 +127,7 @@ public class TransactionRepositoryIT {
     //  Test d'intégration de la méthode 'deleteById' de l'interface  TransactionRepository
     //*********************************************************************************************************
     @Test
-    void testDeleteByIdExistingTransaction() {
+    void testDeleteByIdWithExistingTransaction() {
         // ARRANGE
         int existingTransaction = 2;
 
@@ -139,6 +139,56 @@ public class TransactionRepositoryIT {
         assertFalse(transactionRepository.findById(existingTransaction).isPresent());
     }
 
+
+    //****************************************************************************************************************
+    //  Test d'intégration de la méthode 'findTransactionSendersByConnectionId' de l'interface  TransactionRepository
+    //****************************************************************************************************************
+    @Test
+    void testFindTransactionSendersByConnectionId() {
+        // ARRANGE
+        int senderConnectionId = 2;
+
+        // ACT
+        List<Transaction> senderTransactions = transactionRepository.findTransactionSendersByConnectionId(senderConnectionId);
+
+        // ASSERT
+        assertTrue(senderTransactions.get(0).getPmbAccountReceiver().getPmbAccountId() == 3);
+        assertTrue(senderTransactions.get(1).getPmbAccountReceiver().getPmbAccountId() == 4);
+    }
+
+    //*****************************************************************************************************************
+    //  Test d'intégration de la méthode 'findTransactionReceiversByConnectionId' de l'interface  TransactionRepository
+    //*****************************************************************************************************************
+    @Test
+    void testFindTransactionReceiversByConnectionId() {
+        // ARRANGE
+        int senderConnectionId = 2;
+
+        // ACT
+        List<Transaction> receiverTransactions = transactionRepository.findTransactionReceiversByConnectionId(senderConnectionId);
+
+        // ASSERT
+        assertTrue(receiverTransactions.get(0).getPmbAccountSender().getPmbAccountId() == 1);
+        assertTrue(receiverTransactions.get(1).getPmbAccountSender().getPmbAccountId() == 9);
+    }
+
+    //*****************************************************************************************************************
+    //  Test d'intégration de la méthode 'findTransactionsByConnectionId' de l'interface  TransactionRepository
+    //*****************************************************************************************************************
+    @Test
+    void testFindTransactionsByConnectionIdByConnectionId() {
+        // ARRANGE
+        int senderConnectionId = 2;
+
+        // ACT
+        List<Transaction> transactions = transactionRepository.findTransactionsByConnectionId(senderConnectionId);
+
+        // ASSERT
+        assertTrue(transactions.get(0).getPmbAccountSender().getPmbAccountId() == 1);
+        assertTrue(transactions.get(1).getPmbAccountReceiver().getPmbAccountId() == 3);
+        assertTrue(transactions.get(2).getPmbAccountReceiver().getPmbAccountId() == 4);
+        assertTrue(transactions.get(3).getPmbAccountSender().getPmbAccountId() == 9);
+    }
 
 
 

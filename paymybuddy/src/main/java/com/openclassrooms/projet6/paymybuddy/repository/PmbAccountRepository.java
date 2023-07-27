@@ -10,4 +10,10 @@ import java.util.Optional;
 public interface PmbAccountRepository extends JpaRepository<PmbAccount, Integer> {
     @Query(value = "SELECT * FROM PMB_account WHERE connection_id = :id", nativeQuery = true)
     public Optional<PmbAccount>  findByConnectionId(@Param("id") Integer id);
+
+    @Query(value = "SELECT balance FROM PMB_account WHERE connection_id = :id", nativeQuery = true)
+    public float  getBalanceByConnectionId(@Param("id") Integer id);
+
+
+
 }

@@ -13,7 +13,7 @@ public interface PayMyBuddyService {
     public float getBalanceAccount(int connectionId);
     public List<TransactionDto> getTransactions(int connectionId);
     public List<BuddyConnectedDto> getBuddiesConnected(int connectionId);
-    public boolean addConnection(int connectionId, int  connectionBuddyId);
+    public boolean addBuddyConnected(int connectionId, int  connectionBuddyId);
     public boolean addTransaction(int connectionId, TransactionDto transactionDto);
     public String getContact();
     public ProfileDto getProfile(int connectionId);

@@ -3,16 +3,16 @@ package com.openclassrooms.projet6.paymybuddy.dto;
 
 
 public class TransactionDto {
-    private int connectionId;
+    private int connectionReceiverId;
     private String name;
     private String description;
     private float amount;
 
     public int getConnectionId() {
-        return connectionId;
+        return connectionReceiverId;
     }
     public void setConnectionId(int connectionId) {
-        this.connectionId = connectionId;
+        this.connectionReceiverId = connectionId;
     }
 
     public String getName() {
