@@ -8,11 +8,11 @@ public class TransactionDto {
     private String description;
     private float amount;
 
-    public int getConnectionId() {
+    public int getConnectionReceiverId() {
         return connectionReceiverId;
     }
-    public void setConnectionId(int connectionId) {
-        this.connectionReceiverId = connectionId;
+    public void setConnectionReceiverId(int connectionReceiverId) {
+        this.connectionReceiverId = connectionReceiverId;
     }
 
     public String getName() {

@@ -3,9 +3,17 @@ package com.openclassrooms.projet6.paymybuddy.dto;
 
 
 public class ProfileDto {
+    private int connectionId;
     private String email;
     private String password;
     private String name;
+
+    public int getConnectionId() {
+        return connectionId;
+    }
+    public void setConnectionId(int connectionId) {
+        this.connectionId = connectionId;
+    }
 
     public String getEmail() {
         return email;

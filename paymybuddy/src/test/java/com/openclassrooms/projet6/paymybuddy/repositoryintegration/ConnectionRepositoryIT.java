@@ -71,6 +71,7 @@ public class ConnectionRepositoryIT {
         // ARRANGE, ACT
         String emailExistingConnection = "connection2_test@gmail.com";
         String passwordExistingConnection = "pwd2";
+        String nameExistingConnection = "buddy2";
         int idExistingConnection = 2;
 
         // ACT
@@ -81,6 +82,7 @@ public class ConnectionRepositoryIT {
         assertNotNull(connection);
         assertTrue(connection.getEmail().equals(emailExistingConnection));
         assertTrue(connection.getPassword().equals(passwordExistingConnection));
+        assertTrue(connection.getName().equals(nameExistingConnection));
 
         List<Connection> buddiesConnected = connection.getBuddiesConnected();
         assertTrue(buddiesConnected.size() == 3);

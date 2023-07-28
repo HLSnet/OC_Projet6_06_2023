@@ -54,7 +54,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
             for (Transaction    transaction : transactions) {
                 TransactionDto transactionDto = new TransactionDto();
 
-                transactionDto.setConnectionId(connectionId);
+                transactionDto.setConnectionReceiverId(connectionId);
                 transactionDto.setName(connectionRepository.findById(connectionId).get().getName());
                 transactionDto.setDescription(transaction.getDescription());
                 transactionDto.setAmount(transaction.getAmount());
@@ -95,7 +95,23 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
 
     @Override
     public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
-        return false;
+        boolean result = false;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+
+        if (optConnection.isPresent()) {
+            optConnection.get().addBuddyConnected(connectionRepository.findById(connectionId).get());
+
+            Transaction newTransaction = new Transaction();
+            newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());
+            newTransaction.setPmbAccountReceiver(pmbAccountRepository.findByConnectionId(transactionDto.getConnectionReceiverId()).get());
+            newTransaction.setAmount(transactionDto.getAmount());
+            newTransaction.setDescription(transactionDto.getDescription());
+
+            Transaction transaction  = transactionRepository.save(newTransaction);
+
+            result = true;
+        }
+        return result;
     }
 
     @Override
@@ -105,86 +121,54 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
 
     @Override
     public ProfileDto getProfile(int connectionId) {
-        return null;
+        ProfileDto profileDto = null;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+
+        if (optConnection.isPresent()) {
+            profileDto = new ProfileDto();
+            profileDto.setConnectionId(connectionId);
+            profileDto.setEmail(optConnection.get().getEmail());
+            profileDto.setPassword(optConnection.get().getPassword());
+            profileDto.setName(optConnection.get().getName());
+        }
+        return profileDto;
     }
 
     @Override
     public boolean updateProfile(ProfileDto profileDto) {
-        return false;
+        boolean result = false;
+        Optional<Connection> optConnection = connectionRepository.findById(profileDto.getConnectionId());
+
+        if (optConnection.isPresent()) {
+            optConnection.get().setEmail(profileDto.getEmail());
+            optConnection.get().setPassword(profileDto.getPassword());
+            optConnection.get().setName(profileDto.getName());
+
+            result = true;
+        }
+        return result;
     }
 
 
     @Override
     public boolean register(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
 
     @Override
     public boolean logint(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
 
     @Override
     public boolean logout(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
-
-
-
-//    public List<ConnectionDto> getConnections() {
-//        List<Connection> connections = connectionRepository.findAll();
-//
-//        List<ConnectionDto> connectionDtos = new ArrayList<>();
-//        for (Connection connection: connections ) {
-//            ConnectionDto connectionDto = new ConnectionDto();
-//            connectionDto.setUserId(connection.getConnectionId());
-//            connectionDto.setEmail(connection.getEmail());
-//            connectionDto.setPassword(connection.getPassword());
-//            connectionDto.setPmbAccount(connection.getPmbAccount());
-//            connectionDtos.add(connectionDto);
-//        }
-//        return connectionDtos;
-//    }
-//
-//
-//    public ConnectionDto getConnectionById(Integer id) {
-//        Connection connection = connectionRepository.findById(id).get();
-//
-//        ConnectionDto connectionDto = new ConnectionDto();
-//
-//        connectionDto.setUserId(connection.getConnectionId());
-//        connectionDto.setEmail(connection.getEmail());
-//        connectionDto.setPassword(connection.getPassword());
-//        connectionDto.setPmbAccount(connection.getPmbAccount());
-//
-//        return connectionDto;
-//    }
-//
-//
-//    public List<PmbAccountDto> getPmbAccounts(){
-//        List<PmbAccount> pmbAccounts = pmbAccountRepository.findAll();
-//
-//        List<PmbAccountDto> pmbAccountDtos = new ArrayList<>();
-//        for (PmbAccount pmbAccount: pmbAccounts ) {
-//            PmbAccountDto pmbAccountDto = new PmbAccountDto();
-//            pmbAccountDto.setPmbAccountId(pmbAccount.getPmbAccountId());
-//            pmbAccountDto.setBalance(pmbAccount.getBalance());
-//            pmbAccountDto.setConnection(pmbAccount.getConnection());
-//            pmbAccountDtos.add(pmbAccountDto);
-//        }
-//        return pmbAccountDtos;
-//    }
-//
-//
-//    public PmbAccountDto getPmbAccountById(Integer id) {
-//        PmbAccount pmbAccount = pmbAccountRepository.findById(id).get();
-//
-//        PmbAccountDto pmbAccountDto = new PmbAccountDto();
-//
-//        pmbAccountDto.setBalance(pmbAccount.getBalance());
-//        pmbAccountDto.setConnection(pmbAccount.getConnection());
-//
-//        return pmbAccountDto;
-//    }
 
 }
