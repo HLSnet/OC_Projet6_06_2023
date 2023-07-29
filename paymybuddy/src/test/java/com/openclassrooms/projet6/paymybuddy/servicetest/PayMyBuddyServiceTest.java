@@ -1,6 +1,7 @@
 package com.openclassrooms.projet6.paymybuddy.servicetest;
 
 import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
+import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
 import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
 import com.openclassrooms.projet6.paymybuddy.model.Connection;
 import com.openclassrooms.projet6.paymybuddy.model.Transaction;
@@ -12,13 +13,13 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 
 import static com.openclassrooms.projet6.paymybuddy.constants.Constants.NON_EXISTING_ACCOUNT;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(scripts = "classpath:creation_alimentation_BDD_test.sql")
@@ -41,6 +42,7 @@ public class PayMyBuddyServiceTest {
     //  Tests unitaires de la méthode 'getBalanceAccount' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
     @Test
+    @Commit
     void testGetBalanceAccountWithExistingConnectionId() {
         // ARRANGE
         int connectionId = 2;
@@ -54,6 +56,7 @@ public class PayMyBuddyServiceTest {
     }
 
     @Test
+    @Commit
     void testGetBalanceAccountWithNonExistingConnectionId() {
         // ARRANGE
         int connectionId = 100;
@@ -69,6 +72,7 @@ public class PayMyBuddyServiceTest {
     //  Tests unitaires de la méthode 'getTransactions' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
     @Test
+    @Commit
     void testGetTransactionsWithExistingConnectionId() {
         // ARRANGE
         int connectionId = 2;
@@ -86,6 +90,7 @@ public class PayMyBuddyServiceTest {
     }
 
     @Test
+    @Commit
     void testGetTransactionsWithNonExistingConnectionId() {
         // ARRANGE
         int connectionId = 100;
@@ -99,6 +104,7 @@ public class PayMyBuddyServiceTest {
     //  Tests unitaires de la méthode 'getBuddiesConnected' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
     @Test
+    @Commit
     void testGetBuddiesConnectedWithExistingConnectionId() {
         // ARRANGE
         int connectionId = 2;
@@ -115,6 +121,7 @@ public class PayMyBuddyServiceTest {
     }
 
     @Test
+    @Commit
     void testGetBuddiesConnectedWithNonExistingConnectionId() {
         // ARRANGE
         int connectionId = 100;
@@ -127,6 +134,7 @@ public class PayMyBuddyServiceTest {
     //  Tests unitaires de la méthode 'addBuddyConnected' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
     @Test
+    @Commit
     void testAddBuddyConnectedWithExistingConnectionId() {
         // ARRANGE
         int connectionId = 2;
@@ -143,6 +151,7 @@ public class PayMyBuddyServiceTest {
     }
 
     @Test
+    @Commit
     void testAddBuddyConnectedWithNonExistingConnectionId() {
         // ARRANGE
         int connectionId = 100;
@@ -157,51 +166,160 @@ public class PayMyBuddyServiceTest {
     //  Tests unitaires de la méthode 'addTransaction' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
     @Test
+    @Commit
     void testAddTransactionWithExistingConnectionId() {
-//        // ARRANGE
-//        int connectionId = 2;
-//
-//        int connectionReceiverId = 7;
-//        String name = connectionRepository.findById(connectionId).get().getName();
-//        String description = "Transaction PMB_account2 vers PMB_account7";
-//        float amount= 70;
-//
-//
-//
-//        // ACT
-//        Boolean resultat = payMyBuddyServiceImpl.addBuddyConnected(connectionId, connectionBuddyId);
-//
-//        // ASSERT
-//        assertTrue(resultat);
-//        Connection connection = connectionRepository.findById(connectionId).get();
-//        Connection connectionBuddy = connectionRepository.findById(connectionBuddyId).get();
-//        assertTrue(connection.getBuddiesConnected().contains(connectionBuddy));
+        // ARRANGE
+        int connectionId = 2;
+        int connectionReceiverId = 7;
+        int nbTransaction = transactionRepository.findTransactionSendersByConnectionId(connectionId).size();
+
+        String name = connectionRepository.findById(connectionReceiverId).get().getName();
+        String description = "Transaction PMB_account2 vers PMB_account7";
+        float amount = 70;
+
+        TransactionDto transactionDto = new TransactionDto();
+        transactionDto.setConnectionReceiverId(connectionReceiverId);
+        transactionDto.setName(name);
+        transactionDto.setDescription(description);
+        transactionDto.setAmount(amount);
+
+        // ACT
+        Boolean resultat = payMyBuddyServiceImpl.addTransaction(connectionId, transactionDto);
+
+        // ASSERT
+        assertTrue(resultat);
+        List<Transaction> transactions = transactionRepository.findTransactionSendersByConnectionId(connectionId);
+
+        assertTrue(transactions.size() == nbTransaction + 1);
+        assertTrue(transactions.get(nbTransaction).getPmbAccountSender().getConnection().getConnectionId() == connectionId);
+        assertTrue(transactions.get(nbTransaction).getPmbAccountReceiver().getConnection().getConnectionId() == connectionReceiverId);
+        assertTrue(transactions.get(nbTransaction).getDescription().equals(description));
+        assertTrue(transactions.get(nbTransaction).getAmount() == amount);
     }
 
+    @Test
+    @Commit
+    void testAddTransactionWithNonExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 100;
+        int connectionReceiverId = 7;
+        int nbTransaction = transactionRepository.findTransactionSendersByConnectionId(connectionId).size();
 
-    //public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
+        String name = connectionRepository.findById(connectionReceiverId).get().getName();
+        String description = "Transaction PMB_account2 vers PMB_account7";
+        float amount = 70;
 
+        TransactionDto transactionDto = new TransactionDto();
+        transactionDto.setConnectionReceiverId(connectionReceiverId);
+        transactionDto.setName(name);
+        transactionDto.setDescription(description);
+        transactionDto.setAmount(amount);
 
-
-    //*********************************************************************************************************
-    //  Tests unitaires de la méthode 'getContact' de la classe  payMyBuddyServiceImpl
-    //*********************************************************************************************************
-
+        // ACT, ASSERT
+        assertFalse(payMyBuddyServiceImpl.addTransaction(connectionId, transactionDto));
+    }
 
 
     //*********************************************************************************************************
     //  Tests unitaires de la méthode 'getProfile' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
+    @Test
+    @Commit
+    void testGetProfileWithExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 2;
+        Connection connection = connectionRepository.findById(connectionId).get();
 
+        // ACT
+        ProfileDto profileDto = payMyBuddyServiceImpl.getProfile(connectionId);
 
+        // ASSERT
+        assertNotNull(profileDto);
+        assertTrue(profileDto.getConnectionId() == connectionId);
+        assertTrue(profileDto.getEmail().equals(connection.getEmail()));
+        assertTrue(profileDto.getPassword().equals(connection.getPassword()));
+        assertTrue(profileDto.getName().equals(connection.getName()));
+    }
+
+    @Test
+    @Commit
+    void testGetProfileWithNonExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 100;
+
+        // ACT
+        ProfileDto profileDto = payMyBuddyServiceImpl.getProfile(connectionId);
+
+        // ASSERT
+        assertNull(profileDto);
+    }
 
 
     //*********************************************************************************************************
     //  Tests unitaires de la méthode 'updateProfile' de la classe  payMyBuddyServiceImpl
     //*********************************************************************************************************
+    @Test
+    @Commit
+    void testUpdateProfileWithExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 2;
 
+        String newEmail= "connection2_test_new@gmail.com";
+        String newPassword= "pwd2_new";
+        String newName= "buddy2_new";
 
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setConnectionId(connectionId);
+        profileDto.setEmail(newEmail);
+        profileDto.setPassword(newPassword);
+        profileDto.setName(newName);
 
+        // ACT
+        Boolean resultat = payMyBuddyServiceImpl.updateProfile(profileDto);
+
+        // ASSERT
+        assertTrue(resultat);
+
+        Connection connection = connectionRepository.findById(connectionId).get();
+        assertTrue(connection.getEmail().equals(newEmail));
+        assertTrue(connection.getPassword().equals(newPassword));
+        assertTrue(connection.getName().equals(newName));
+    }
+
+    @Test
+    @Commit
+    void testUpdateProfileWithNonExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 100;
+
+        String newEmail= "connection2_test_new@gmail.com";
+        String newPassword= "pwd2_new";
+        String newName= "buddy2_new";
+
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setConnectionId(connectionId);
+        profileDto.setEmail(newEmail);
+        profileDto.setPassword(newPassword);
+        profileDto.setName(newName);
+
+        // ACT
+        Boolean resultat = payMyBuddyServiceImpl.updateProfile(profileDto);
+
+        // ASSERT
+        assertFalse(resultat);
+    }
+
+    //*********************************************************************************************************
+    //  Tests unitaires de la méthode 'register' de la classe  payMyBuddyServiceImpl
+    //*********************************************************************************************************
+
+    //*********************************************************************************************************
+    //  Tests unitaires de la méthode 'logint' de la classe  payMyBuddyServiceImpl
+    //*********************************************************************************************************
+
+    //*********************************************************************************************************
+    //  Tests unitaires de la méthode 'logout' de la classe  payMyBuddyServiceImpl
+    //*********************************************************************************************************
 
 
 }

@@ -8,11 +8,11 @@ public class TransactionDto {
     private String description;
     private float amount;
 
-    public int getConnectionId() {
+    public int getConnectionReceiverId() {
         return connectionReceiverId;
     }
-    public void setConnectionId(int connectionId) {
-        this.connectionReceiverId = connectionId;
+    public void setConnectionReceiverId(int connectionReceiverId) {
+        this.connectionReceiverId = connectionReceiverId;
     }
 
     public String getName() {
@@ -34,5 +34,15 @@ public class TransactionDto {
     }
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionDto{" +
+                "connectionReceiverId=" + connectionReceiverId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", amount=" + amount +
+                '}';
     }
 }

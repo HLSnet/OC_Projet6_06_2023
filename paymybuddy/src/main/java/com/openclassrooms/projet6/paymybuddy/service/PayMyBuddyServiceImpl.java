@@ -33,6 +33,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+    /**
+     * Gets the balance of the PmbAccount associated with the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the balance for.
+     * @return The balance of the PmbAccount associated with the connectionId.
+     *         If the PmbAccount is not found, returns the value NON_EXISTING_ACCOUNT.
+     */
     @Override
     public float getBalanceAccount(int connectionId) {
         float balanceAccount = NON_EXISTING_ACCOUNT;
@@ -44,6 +51,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return balanceAccount;
     }
 
+    /**
+     * Gets a list of TransactionDto objects associated with the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the transactions for.
+     * @return A list of TransactionDto objects containing transaction details for the connectionId.
+     *         If no transactions are found, an empty list is returned.
+     */
     @Override
     public List<TransactionDto> getTransactions(int connectionId) {
         List<TransactionDto> transactionDtos = new ArrayList<>();
@@ -54,7 +68,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
             for (Transaction    transaction : transactions) {
                 TransactionDto transactionDto = new TransactionDto();
 
-                transactionDto.setConnectionId(connectionId);
+                transactionDto.setConnectionReceiverId(connectionId);
                 transactionDto.setName(connectionRepository.findById(connectionId).get().getName());
                 transactionDto.setDescription(transaction.getDescription());
                 transactionDto.setAmount(transaction.getAmount());
@@ -64,6 +78,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return transactionDtos;
     }
 
+    /**
+     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
+     *
+     * @param connectionId The ID of the Connection for which to retrieve the connected buddies.
+     * @return A list of BuddyConnectedDto objects containing information about the connected buddies.
+     *         If the Connection with the given connectionId is not found, an empty list is returned.
+     */
     @Override
     public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
         List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
@@ -81,6 +102,14 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return buddiesConnectedDtos;
     }
 
+    /**
+     * Adds a new buddy connection between the given connectionId and connectionBuddyId.
+     *
+     * @param connectionId      The ID of the Connection to add the buddy connection for.
+     * @param connectionBuddyId The ID of the buddy Connection to be added as a buddy.
+     * @return True if the buddy connection was successfully added, False otherwise.
+     *         The method returns False if either the Connection with connectionId or connectionBuddyId is not found.
+     */
     @Override
     public boolean addBuddyConnected(int connectionId, int  connectionBuddyId) {
         boolean result = false;
@@ -93,98 +122,114 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return result;
     }
 
+
+    /**
+     * Adds a new transaction for the given connectionId using the details from the TransactionDto.
+     *
+     * @param connectionId  The ID of the Connection to add the transaction for.
+     * @param transactionDto The TransactionDto object containing transaction details.
+     * @return True if the transaction was successfully added, False otherwise.
+     *         The method returns False if the Connection with connectionId or the PmbAccount
+     *         associated with connectionId or transactionDto.getConnectionReceiverId() is not found.
+     */
     @Override
     public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
-        return false;
+        boolean result = false;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+
+        if (optConnection.isPresent()) {
+            optConnection.get().addBuddyConnected(connectionRepository.findById(connectionId).get());
+
+            Transaction newTransaction = new Transaction();
+            newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());
+            newTransaction.setPmbAccountReceiver(pmbAccountRepository.findByConnectionId(transactionDto.getConnectionReceiverId()).get());
+            newTransaction.setAmount(transactionDto.getAmount());
+            newTransaction.setDescription(transactionDto.getDescription());
+
+            Transaction transaction  = transactionRepository.save(newTransaction);
+
+            result = true;
+        }
+        return result;
     }
 
+    /**
+     * Gets the contact information.
+     *
+     * @return The contact information as a string.
+     */
     @Override
     public String getContact() {
         return COORDONNEES_CONTACT;
     }
 
+
+    /**
+     * Gets the ProfileDto for the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the profile for.
+     * @return The ProfileDto object containing the profile details for the connectionId.
+     *         If the Connection with the given connectionId is not found, returns null.
+     */
     @Override
     public ProfileDto getProfile(int connectionId) {
-        return null;
+        ProfileDto profileDto = null;
+        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+
+        if (optConnection.isPresent()) {
+            profileDto = new ProfileDto();
+            profileDto.setConnectionId(connectionId);
+            profileDto.setEmail(optConnection.get().getEmail());
+            profileDto.setPassword(optConnection.get().getPassword());
+            profileDto.setName(optConnection.get().getName());
+        }
+        return profileDto;
     }
 
+
+    /**
+     * Updates the profile information for the given ProfileDto.
+     *
+     * @param profileDto The ProfileDto containing the updated profile information.
+     * @return True if the profile was successfully updated, False otherwise.
+     *         The method returns False if the Connection with profileDto.getConnectionId()
+     *         is not found.
+     */
     @Override
     public boolean updateProfile(ProfileDto profileDto) {
-        return false;
+        boolean result = false;
+        Optional<Connection> optConnection = connectionRepository.findById(profileDto.getConnectionId());
+
+        if (optConnection.isPresent()) {
+            optConnection.get().setEmail(profileDto.getEmail());
+            optConnection.get().setPassword(profileDto.getPassword());
+            optConnection.get().setName(profileDto.getName());
+
+            result = true;
+        }
+        return result;
     }
 
 
     @Override
     public boolean register(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
 
     @Override
     public boolean logint(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
 
     @Override
     public boolean logout(int connectionId) {
-        return false;
+        boolean result = false;
+
+        return result;
     }
-
-
-
-//    public List<ConnectionDto> getConnections() {
-//        List<Connection> connections = connectionRepository.findAll();
-//
-//        List<ConnectionDto> connectionDtos = new ArrayList<>();
-//        for (Connection connection: connections ) {
-//            ConnectionDto connectionDto = new ConnectionDto();
-//            connectionDto.setUserId(connection.getConnectionId());
-//            connectionDto.setEmail(connection.getEmail());
-//            connectionDto.setPassword(connection.getPassword());
-//            connectionDto.setPmbAccount(connection.getPmbAccount());
-//            connectionDtos.add(connectionDto);
-//        }
-//        return connectionDtos;
-//    }
-//
-//
-//    public ConnectionDto getConnectionById(Integer id) {
-//        Connection connection = connectionRepository.findById(id).get();
-//
-//        ConnectionDto connectionDto = new ConnectionDto();
-//
-//        connectionDto.setUserId(connection.getConnectionId());
-//        connectionDto.setEmail(connection.getEmail());
-//        connectionDto.setPassword(connection.getPassword());
-//        connectionDto.setPmbAccount(connection.getPmbAccount());
-//
-//        return connectionDto;
-//    }
-//
-//
-//    public List<PmbAccountDto> getPmbAccounts(){
-//        List<PmbAccount> pmbAccounts = pmbAccountRepository.findAll();
-//
-//        List<PmbAccountDto> pmbAccountDtos = new ArrayList<>();
-//        for (PmbAccount pmbAccount: pmbAccounts ) {
-//            PmbAccountDto pmbAccountDto = new PmbAccountDto();
-//            pmbAccountDto.setPmbAccountId(pmbAccount.getPmbAccountId());
-//            pmbAccountDto.setBalance(pmbAccount.getBalance());
-//            pmbAccountDto.setConnection(pmbAccount.getConnection());
-//            pmbAccountDtos.add(pmbAccountDto);
-//        }
-//        return pmbAccountDtos;
-//    }
-//
-//
-//    public PmbAccountDto getPmbAccountById(Integer id) {
-//        PmbAccount pmbAccount = pmbAccountRepository.findById(id).get();
-//
-//        PmbAccountDto pmbAccountDto = new PmbAccountDto();
-//
-//        pmbAccountDto.setBalance(pmbAccount.getBalance());
-//        pmbAccountDto.setConnection(pmbAccount.getConnection());
-//
-//        return pmbAccountDto;
-//    }
 
 }

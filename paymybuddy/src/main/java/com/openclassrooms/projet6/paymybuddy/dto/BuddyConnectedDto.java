@@ -17,4 +17,12 @@ public class BuddyConnectedDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "BuddyConnectedDto{" +
+                "connectionId=" + connectionId +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
