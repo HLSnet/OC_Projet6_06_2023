@@ -33,6 +33,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+    /**
+     * Gets the balance of the PmbAccount associated with the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the balance for.
+     * @return The balance of the PmbAccount associated with the connectionId.
+     *         If the PmbAccount is not found, returns the value NON_EXISTING_ACCOUNT.
+     */
     @Override
     public float getBalanceAccount(int connectionId) {
         float balanceAccount = NON_EXISTING_ACCOUNT;
@@ -44,6 +51,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return balanceAccount;
     }
 
+    /**
+     * Gets a list of TransactionDto objects associated with the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the transactions for.
+     * @return A list of TransactionDto objects containing transaction details for the connectionId.
+     *         If no transactions are found, an empty list is returned.
+     */
     @Override
     public List<TransactionDto> getTransactions(int connectionId) {
         List<TransactionDto> transactionDtos = new ArrayList<>();
@@ -64,6 +78,13 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return transactionDtos;
     }
 
+    /**
+     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
+     *
+     * @param connectionId The ID of the Connection for which to retrieve the connected buddies.
+     * @return A list of BuddyConnectedDto objects containing information about the connected buddies.
+     *         If the Connection with the given connectionId is not found, an empty list is returned.
+     */
     @Override
     public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
         List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
@@ -81,6 +102,14 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return buddiesConnectedDtos;
     }
 
+    /**
+     * Adds a new buddy connection between the given connectionId and connectionBuddyId.
+     *
+     * @param connectionId      The ID of the Connection to add the buddy connection for.
+     * @param connectionBuddyId The ID of the buddy Connection to be added as a buddy.
+     * @return True if the buddy connection was successfully added, False otherwise.
+     *         The method returns False if either the Connection with connectionId or connectionBuddyId is not found.
+     */
     @Override
     public boolean addBuddyConnected(int connectionId, int  connectionBuddyId) {
         boolean result = false;
@@ -93,6 +122,16 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return result;
     }
 
+
+    /**
+     * Adds a new transaction for the given connectionId using the details from the TransactionDto.
+     *
+     * @param connectionId  The ID of the Connection to add the transaction for.
+     * @param transactionDto The TransactionDto object containing transaction details.
+     * @return True if the transaction was successfully added, False otherwise.
+     *         The method returns False if the Connection with connectionId or the PmbAccount
+     *         associated with connectionId or transactionDto.getConnectionReceiverId() is not found.
+     */
     @Override
     public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
         boolean result = false;
@@ -114,11 +153,24 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return result;
     }
 
+    /**
+     * Gets the contact information.
+     *
+     * @return The contact information as a string.
+     */
     @Override
     public String getContact() {
         return COORDONNEES_CONTACT;
     }
 
+
+    /**
+     * Gets the ProfileDto for the given connectionId.
+     *
+     * @param connectionId The ID of the Connection to retrieve the profile for.
+     * @return The ProfileDto object containing the profile details for the connectionId.
+     *         If the Connection with the given connectionId is not found, returns null.
+     */
     @Override
     public ProfileDto getProfile(int connectionId) {
         ProfileDto profileDto = null;
@@ -134,6 +186,15 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return profileDto;
     }
 
+
+    /**
+     * Updates the profile information for the given ProfileDto.
+     *
+     * @param profileDto The ProfileDto containing the updated profile information.
+     * @return True if the profile was successfully updated, False otherwise.
+     *         The method returns False if the Connection with profileDto.getConnectionId()
+     *         is not found.
+     */
     @Override
     public boolean updateProfile(ProfileDto profileDto) {
         boolean result = false;

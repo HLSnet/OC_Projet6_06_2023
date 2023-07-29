@@ -35,4 +35,14 @@ public class ProfileDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileDto{" +
+                "connectionId=" + connectionId +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

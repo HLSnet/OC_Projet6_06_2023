@@ -35,4 +35,14 @@ public class TransactionDto {
     public void setAmount(float amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionDto{" +
+                "connectionReceiverId=" + connectionReceiverId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }
