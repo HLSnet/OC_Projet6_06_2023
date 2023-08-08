@@ -10,15 +10,20 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 
 import static com.openclassrooms.projet6.paymybuddy.constants.Constants.NON_EXISTING_ACCOUNT;
 
 @RestController
+//  ou (trancher) : @Controller
 public class PayMyBuddyController {
      private static Logger logger = LoggerFactory.getLogger(PayMyBuddyController.class);
 
@@ -76,24 +81,67 @@ public class PayMyBuddyController {
 
         List<BuddyConnectedDto> BuddyConnectedDtos = payMyBuddyService.getBuddiesConnected(connectionId);
 
+        if (BuddyConnectedDtos.isEmpty()) {
+            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
+            return ResponseEntity.noContent().build();
+        }
+        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ", request.getMethod(), BuddyConnectedDtos);
+
+
         return ResponseEntity.ok(BuddyConnectedDtos);
     }
 
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should add a contact to the list of contacts  related to a connection
+    // This URL should add a contact (a buddy) to the list of contacts (buddies) related to a connection
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // http://localhost:8080/addBuddies?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>
+    // http://localhost:8080/addBuddy?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>
+    @GetMapping("/addBuddy")
+    public ResponseEntity<Void> addBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @RequestParam int connectionBuddyId, @NotNull HttpServletRequest request) {
+        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
 
+        boolean result = payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId);
 
+        if (!result) {
+            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit : connection(s) non existantes", request.getMethod());
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
+        return ResponseEntity.ok(null);
+    }
 
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // This URL should add a transaction related to a connection (money sender)
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // http://localhost:8080/addTransaction?connectionId=<connectionId>
+//    // http://localhost:8080/addTransaction?connectionBuddyId=<connectionBuddyId>
+//    @GetMapping("/addTransaction")
+//    public ResponseEntity<Void> addTransactionGivenConnectionId(@RequestParam int connectionBuddyId, @RequestBody TransactionDto transactionDto, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionBuddyId);
+//
+//        boolean result = payMyBuddyService.addTransaction(connectionBuddyId, transactionDto);
+//
+//        if (!result) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//
+//        logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
+//
+//
+//
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
+//
+//
+//        return ResponseEntity.created(location).build();
+//    }
+//
+//
+//
+//
 
 
 
@@ -125,6 +173,14 @@ public class PayMyBuddyController {
         logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
 
         ProfileDto profileDto = payMyBuddyService.getProfile(connectionId);
+
+
+        if (profileDto == null) {
+            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
+            return ResponseEntity.noContent().build();
+        }
+        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), profileDto);
+
 
         return ResponseEntity.ok(profileDto);
     }

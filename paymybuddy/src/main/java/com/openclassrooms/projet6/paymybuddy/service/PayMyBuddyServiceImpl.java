@@ -114,14 +114,15 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     public boolean addBuddyConnected(int connectionId, int  connectionBuddyId) {
         boolean result = false;
         Optional<Connection> optConnection = connectionRepository.findById(connectionId);
-
         if (optConnection.isPresent()) {
-            optConnection.get().addBuddyConnected(connectionRepository.findById(connectionBuddyId).get());
-            result = true;
+            Optional<Connection> optConnectionBuddyId = connectionRepository.findById(connectionBuddyId);
+            if (optConnectionBuddyId.isPresent()) {
+                optConnection.get().addBuddyConnected(optConnectionBuddyId.get());
+                result = true;
+            }
         }
         return result;
     }
-
 
     /**
      * Adds a new transaction for the given connectionId using the details from the TransactionDto.
@@ -138,7 +139,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         Optional<Connection> optConnection = connectionRepository.findById(connectionId);
 
         if (optConnection.isPresent()) {
-            optConnection.get().addBuddyConnected(connectionRepository.findById(connectionId).get());
+            optConnection.get().addBuddyConnected(optConnection.get());
 
             Transaction newTransaction = new Transaction();
             newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());
@@ -152,6 +153,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         }
         return result;
     }
+
 
     /**
      * Gets the contact information.
