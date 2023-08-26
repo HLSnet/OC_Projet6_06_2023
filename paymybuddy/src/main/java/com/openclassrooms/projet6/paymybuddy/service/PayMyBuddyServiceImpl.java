@@ -67,15 +67,16 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Override
     public List<TransactionDto> getTransactions(int connectionId) {
         List<TransactionDto> transactionDtos = new ArrayList<>();
-        List<Transaction> transactions = transactionRepository.findTransactionsByConnectionId(connectionId);
+        List<Transaction> transactions = transactionRepository.findTransactionReceiversByConnectionId(connectionId);
 
 
         if (!transactions.isEmpty()) {
             for (Transaction    transaction : transactions) {
                 TransactionDto transactionDto = new TransactionDto();
 
-                transactionDto.setConnectionReceiverId(connectionId);
-                transactionDto.setName(connectionRepository.findById(connectionId).get().getName());
+                int receiverConnectionId = transaction.getPmbAccountReceiver().getConnection().getConnectionId();
+                transactionDto.setConnectionReceiverId(receiverConnectionId);
+                transactionDto.setName(connectionRepository.findById(receiverConnectionId).get().getName());
                 transactionDto.setDescription(transaction.getDescription());
                 transactionDto.setAmount(transaction.getAmount());
                 transactionDtos.add(transactionDto);

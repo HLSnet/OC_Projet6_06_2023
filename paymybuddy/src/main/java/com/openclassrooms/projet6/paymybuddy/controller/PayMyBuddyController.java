@@ -92,17 +92,51 @@ public class PayMyBuddyController {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //http://localhost:8080/transfer
     @GetMapping("/transfer")
-    public String transfer(@NotNull HttpServletRequest request, Model model) {
+    public String transfer(@NotNull HttpServletRequest request, Model model,
+    @RequestParam(value = "page", defaultValue = "0") int page) {
+
         logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<TransactionDto> transactionDtos = payMyBuddyService.getTransactions(customUserDetails.getConnectionId());
 
-        model.addAttribute("transactionDtos", transactionDtos); // Ajoutez cette ligne pour rendre les données disponibles dans le modèle
+        int pageSize = 3;
+        int totalPages = (int) Math.ceil((double) transactionDtos.size() / pageSize);
+
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, transactionDtos.size());
+
+        List<TransactionDto> transactionsOnPage = transactionDtos.subList(start, end);
+
+        model.addAttribute("transactionDtos", transactionsOnPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         return "transfer";
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/addTransaction
+    @PostMapping("/addTransaction")
+    public String addTransaction(@NotNull HttpServletRequest request) {
+
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        System.out.println("ADD TRANSACTION ...");
+
+        return "redirect:/transfer";
+    }
+
+
+
+
+
 
 
 

@@ -144,12 +144,12 @@ public class TransactionRepositoryIT {
     //  Test d'intégration de la méthode 'findTransactionSendersByConnectionId' de l'interface  TransactionRepository
     //****************************************************************************************************************
     @Test
-    void testFindTransactionSendersByConnectionId() {
+    void testFindTransactionReceiversByConnectionId() {
         // ARRANGE
         int senderConnectionId = 2;
 
         // ACT
-        List<Transaction> senderTransactions = transactionRepository.findTransactionSendersByConnectionId(senderConnectionId);
+        List<Transaction> senderTransactions = transactionRepository.findTransactionReceiversByConnectionId(senderConnectionId);
 
         // ASSERT
         assertEquals(senderTransactions.get(0).getPmbAccountReceiver().getPmbAccountId(),3);
@@ -160,12 +160,13 @@ public class TransactionRepositoryIT {
     //  Test d'intégration de la méthode 'findTransactionReceiversByConnectionId' de l'interface  TransactionRepository
     //*****************************************************************************************************************
     @Test
-    void testFindTransactionReceiversByConnectionId() {
+
+    void testFindTransactionSendersByConnectionId() {
         // ARRANGE
-        int senderConnectionId = 2;
+        int receiverConnectionId = 2;
 
         // ACT
-        List<Transaction> receiverTransactions = transactionRepository.findTransactionReceiversByConnectionId(senderConnectionId);
+        List<Transaction> receiverTransactions = transactionRepository.findTransactionSendersByConnectionId(receiverConnectionId);
 
         // ASSERT
         assertEquals(receiverTransactions.get(0).getPmbAccountSender().getPmbAccountId(), 1);

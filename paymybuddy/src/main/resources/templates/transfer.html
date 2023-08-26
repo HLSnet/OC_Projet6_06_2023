@@ -24,12 +24,26 @@
             </div>
         </div>
 
+        <div class="container my-3">
+            <h6>Send Money</h6>
+                <div style="background-color: rgba(108, 117, 125, 0.1);">
+                    <form  method="post"  th:action="@{/addTransaction}" >
+                        <div class="mb-2 p-5">
+                            <!--                    <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
+                            <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+                            <label > €</label>
+                            <button class="btn btn-primary border-0 "type="submit"  style="width: 150px; background-color: #81bf50;">Pay</button>
+                        </div>
+                    </form>
 
+
+                </div>
+        </div>
 
 
         <div class="container mt-5">
             <h6>My Transactions</h6>
-            <table class="table table-striped  border border-dark border-2">
+            <table class="table table-striped  border border-dark border-2 text-center " style="line-height: 3;">
                 <thead>
                 <tr class="text-white" style="background-color: #81bf50;">
                     <th>Connections</th>
@@ -41,15 +55,32 @@
                 <tr th:each="transaction : ${transactionDtos}">
                     <td th:text="${transaction.name}">-</td>
                     <td th:text="${transaction.description}">-</td>
-                    <td th:text="${transaction.amount} + '€'">-</td>
+<!--                    <td th:text="${transaction.amount} + '€'">-</td>-->
+                    <td th:text="${#numbers.formatInteger(transaction.amount, 0,'COMMA')} + '€'">-</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
 
-
-
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{/transfer(page=${currentPage - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:class="${pageNumber == currentPage ? 'page-item active' : 'page-item'}">
+                    <a class="page-link" th:href="@{/transfer(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                </li>
+                <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{/transfer(page=${currentPage + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
 
     </div>
