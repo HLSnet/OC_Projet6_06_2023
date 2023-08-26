@@ -1,5 +1,6 @@
 package com.openclassrooms.projet6.paymybuddy.service;
 
+import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
 import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
 import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
 import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
@@ -18,8 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.openclassrooms.projet6.paymybuddy.constants.Constants.COORDONNEES_CONTACT;
-import static com.openclassrooms.projet6.paymybuddy.constants.Constants.NON_EXISTING_ACCOUNT;
-
 
 @Service
 @Transactional
@@ -33,22 +32,29 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+
+    
+
+
     /**
-     * Gets the balance of the PmbAccount associated with the given connectionId.
+     * Retrieves the balance information for a user's account based on the given connection ID.
      *
-     * @param connectionId The ID of the Connection to retrieve the balance for.
-     * @return The balance of the PmbAccount associated with the connectionId.
-     *         If the PmbAccount is not found, returns the value NON_EXISTING_ACCOUNT.
+     * @param connectionId The unique identifier of the connection associated with the account.
+     * @return A BalanceDto object containing the account's name and balance if the connection and account are found, else null.
      */
     @Override
-    public float getBalanceAccount(int connectionId) {
-        float balanceAccount = NON_EXISTING_ACCOUNT;
+    public HomeDto getBalanceAccount(int connectionId) {
+        HomeDto homeDto = null;
 
-        Optional<PmbAccount> pmbAccount = pmbAccountRepository.findByConnectionId(connectionId);
-        if (pmbAccount.isPresent()) {
-            balanceAccount= pmbAccount.get().getBalance();
+        Optional<Connection> connection = connectionRepository.findById(connectionId);
+        Optional<PmbAccount> pmbAccount = pmbAccountRepository.findById(connectionId);
+        if (connection.isPresent() && pmbAccount.isPresent()) {
+            homeDto = new HomeDto();
+            homeDto.setName(connection.get().getName());
+            homeDto.setBalance(pmbAccount.get().getBalance());
         }
-        return balanceAccount;
+
+        return homeDto;
     }
 
     /**
@@ -231,6 +237,20 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     public boolean logout(int connectionId) {
         boolean result = false;
 
+        return result;
+    }
+
+    public boolean addToBalance(int connectionId, float amountCredit){
+        boolean result = false;
+
+        Optional<PmbAccount> pmbAccount = pmbAccountRepository.findById(connectionId);
+        if (pmbAccount.isPresent()) {
+            float balance = pmbAccount.get().getBalance();
+            if ((amountCredit >= 0) || (balance + amountCredit) >= 0 ){
+                pmbAccount.get().setBalance(balance + amountCredit);
+                result= true;
+            }
+        }
         return result;
     }
 

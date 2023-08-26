@@ -57,9 +57,9 @@ public class ConnectionRepositoryIT {
         List<Connection> connections = connectionRepository.findAll();
 
         // ASSERT
-        assertTrue(connections.size() == 9);
-        assertTrue(connections.get(1).getEmail().equals(email));
-        assertTrue(connections.get(1).getPassword().equals(password));
+        assertEquals(connections.size(), 9);
+        assertEquals(connections.get(1).getEmail(),email);
+        assertEquals(connections.get(1).getPassword(), password);
     }
 
     //*********************************************************************************************************
@@ -80,20 +80,20 @@ public class ConnectionRepositoryIT {
 
         // ASSERT
         assertNotNull(connection);
-        assertTrue(connection.getEmail().equals(emailExistingConnection));
-        assertTrue(connection.getPassword().equals(passwordExistingConnection));
-        assertTrue(connection.getName().equals(nameExistingConnection));
+        assertEquals(connection.getEmail(), emailExistingConnection);
+        assertEquals(connection.getPassword(), passwordExistingConnection);
+        assertEquals(connection.getName(), nameExistingConnection);
 
         List<Connection> buddiesConnected = connection.getBuddiesConnected();
-        assertTrue(buddiesConnected.size() == 3);
-        assertTrue(buddiesConnected.get(0).getEmail().equals("connection3_test@gmail.com"));
-        assertTrue(buddiesConnected.get(1).getEmail().equals("connection4_test@gmail.com"));
-        assertTrue(buddiesConnected.get(2).getEmail().equals("connection5_test@gmail.com"));
+        assertEquals(buddiesConnected.size(), 3);
+        assertEquals(buddiesConnected.get(0).getEmail(), "connection3_test@gmail.com");
+        assertEquals(buddiesConnected.get(1).getEmail(), "connection4_test@gmail.com");
+        assertEquals(buddiesConnected.get(2).getEmail(), "connection5_test@gmail.com");
 
         List<Connection> buddiesConnector = connection.getBuddiesConnector();
-        assertTrue(buddiesConnector.size() == 2);
-        assertTrue(buddiesConnector.get(0).getEmail().equals("connection1_test@gmail.com"));
-        assertTrue(buddiesConnector.get(1).getEmail().equals("connection9_test@gmail.com"));
+        assertEquals(buddiesConnector.size(), 2);
+        assertEquals(buddiesConnector.get(0).getEmail(), "connection1_test@gmail.com");
+        assertEquals(buddiesConnector.get(1).getEmail(), "connection9_test@gmail.com");
     }
 
     @Test
@@ -122,8 +122,8 @@ public class ConnectionRepositoryIT {
 
         // ASSERT
         assertNotNull(connection);
-        assertTrue(connection.getConnectionId() == idExistingConnection);
-        assertTrue(connection.getPassword().equals(passwordExistingConnection));
+        assertEquals(connection.getConnectionId(), idExistingConnection);
+        assertEquals(connection.getPassword(), passwordExistingConnection);
     }
     @Test
     void testFindByEmailANonExistingConnection() {
@@ -159,8 +159,8 @@ public class ConnectionRepositoryIT {
 
         // ASSERT
         assertNotNull(connectionSaved.getConnectionId());
-        assertTrue(connectionSaved.getEmail().equals(email));
-        assertTrue(connectionSaved.getPassword().equals(password));
+        assertEquals(connectionSaved.getEmail(), email);
+        assertEquals(connectionSaved.getPassword(), password);
 
         assertTrue(connectionRepository.findById(connectionSaved.getConnectionId()).isPresent());
 
@@ -181,8 +181,8 @@ public class ConnectionRepositoryIT {
 
         // ASSERT : on vérifie que l'enregistrement est inchangé (pas d'ajout , ni de modification , ni suppression)
         assertNotNull(connection.getConnectionId());
-        assertTrue(connection.getEmail().equals(existingConnection.getEmail()));
-        assertTrue(connection.getPassword().equals(existingConnection.getPassword()));
+        assertEquals(connection.getEmail(), existingConnection.getEmail());
+        assertEquals(connection.getPassword(), existingConnection.getPassword());
 
         Optional<Connection> newConnectionOpt = connectionRepository.findById(connection.getConnectionId());
         assertTrue(newConnectionOpt.isPresent());
@@ -238,7 +238,7 @@ public class ConnectionRepositoryIT {
 
         // ASSERT
         // On vérifie que le nombre de connection dans la table connection est inchangé
-        assertTrue(connectionRepository.findAll().size() == nbConnection);
+        assertEquals(connectionRepository.findAll().size(), nbConnection);
     }
 
 
@@ -259,8 +259,8 @@ public class ConnectionRepositoryIT {
 
         // ASSERT
         assertNotNull(connectionUpdated.getConnectionId());
-        assertTrue(connectionUpdated.getEmail().equals(email));
-        assertTrue(connectionUpdated.getPassword().equals(password));
+        assertEquals(connectionUpdated.getEmail(), email);
+        assertEquals(connectionUpdated.getPassword(), password);
 
         assertTrue(connectionRepository.findById(connectionUpdated.getConnectionId()).isPresent());
     }
@@ -287,15 +287,15 @@ public class ConnectionRepositoryIT {
         buddyConnector = connectionRepository.findById(buddyConnectorId).get();
         assertNotNull(buddyConnector);
         buddiesConnected = buddyConnector.getBuddiesConnected();
-        assertTrue(buddiesConnected.size() == 4);
-        assertTrue(buddiesConnected.get(0).getEmail().equals("connection3_test@gmail.com"));
-        assertTrue(buddiesConnected.get(1).getEmail().equals("connection4_test@gmail.com"));
-        assertTrue(buddiesConnected.get(2).getEmail().equals("connection5_test@gmail.com"));
-        assertTrue(buddiesConnected.get(3).getEmail().equals("connection7_test@gmail.com"));
+        assertEquals(buddiesConnected.size(), 4);
+        assertEquals(buddiesConnected.get(0).getEmail(), "connection3_test@gmail.com");
+        assertEquals(buddiesConnected.get(1).getEmail(), "connection4_test@gmail.com");
+        assertEquals(buddiesConnected.get(2).getEmail(), "connection5_test@gmail.com");
+        assertEquals(buddiesConnected.get(3).getEmail(), "connection7_test@gmail.com");
 
         newBuddyConnected = connectionRepository.findById(newBuddyConnectedId).get();
         assertNotNull(newBuddyConnected);
-        assertTrue(newBuddyConnected.getBuddiesConnector().size() == 5);
-        assertTrue(newBuddyConnected.getBuddiesConnector().get(4).getEmail().equals("connection2_test@gmail.com"));
+        assertEquals(newBuddyConnected.getBuddiesConnector().size(), 5);
+        assertEquals(newBuddyConnected.getBuddiesConnector().get(4).getEmail(), "connection2_test@gmail.com");
     }
 }
