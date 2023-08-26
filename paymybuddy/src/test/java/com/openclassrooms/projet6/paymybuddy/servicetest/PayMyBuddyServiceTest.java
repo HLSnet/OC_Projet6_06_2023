@@ -1,5 +1,6 @@
 package com.openclassrooms.projet6.paymybuddy.servicetest;
 
+import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
 import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
 import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
 import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
@@ -18,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 
-import static com.openclassrooms.projet6.paymybuddy.constants.Constants.NON_EXISTING_ACCOUNT;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -49,10 +50,10 @@ public class PayMyBuddyServiceTest {
         float balanceAccountFromDB = pmbAccountRepository.findByConnectionId(connectionId).get().getBalance();
 
         // ACT
-        float balanceAccountFromService = payMyBuddyServiceImpl.getBalanceAccount(connectionId);
+        HomeDto homeDto = payMyBuddyServiceImpl.getBalanceAccount(connectionId);
 
         // ASSERT
-        assertTrue(balanceAccountFromService == balanceAccountFromDB);
+         assertEquals(homeDto.getBalance(), balanceAccountFromDB);
     }
 
     @Test
@@ -62,10 +63,10 @@ public class PayMyBuddyServiceTest {
         int connectionId = 100;
 
         // ACT
-        float balanceAccount = payMyBuddyServiceImpl.getBalanceAccount(connectionId);
+        HomeDto homeDto = payMyBuddyServiceImpl.getBalanceAccount(connectionId);
 
         // ASSERT
-        assertTrue(balanceAccount == NON_EXISTING_ACCOUNT);
+        assertEquals(homeDto, null);
     }
 
     //*********************************************************************************************************
@@ -83,10 +84,10 @@ public class PayMyBuddyServiceTest {
         List<TransactionDto> transactionDtos = payMyBuddyServiceImpl.getTransactions(connectionId);
 
         // ASSERT
-        assertTrue(transactionDtos.size() == transactions.size());
-        assertTrue(transactionDtos.get(0).getName().equals(name));
-        assertTrue(transactionDtos.get(0).getDescription().equals(transactions.get(0).getDescription()));
-        assertTrue(transactionDtos.get(0).getAmount() == transactions.get(0).getAmount());
+        assertEquals(transactionDtos.size(), transactions.size());
+        assertEquals(transactionDtos.get(0).getName(), name);
+        assertEquals(transactionDtos.get(0).getDescription(), transactions.get(0).getDescription());
+        assertEquals(transactionDtos.get(0).getAmount(), transactions.get(0).getAmount());
     }
 
     @Test
@@ -114,10 +115,10 @@ public class PayMyBuddyServiceTest {
         List<BuddyConnectedDto> buddiesConnectedDtos = payMyBuddyServiceImpl.getBuddiesConnected(connectionId);
 
         // ASSERT
-        assertTrue(buddiesConnectedDtos.size() == buddiesConnected.size());
-        assertTrue(buddiesConnectedDtos.get(0).getName().equals(buddiesConnected.get(0).getName()));
-        assertTrue(buddiesConnectedDtos.get(1).getName().equals(buddiesConnected.get(1).getName()));
-        assertTrue(buddiesConnectedDtos.get(2).getName().equals(buddiesConnected.get(2).getName()));
+        assertEquals(buddiesConnectedDtos.size(), buddiesConnected.size());
+        assertEquals(buddiesConnectedDtos.get(0).getName(), buddiesConnected.get(0).getName());
+        assertEquals(buddiesConnectedDtos.get(1).getName(), buddiesConnected.get(1).getName());
+        assertEquals(buddiesConnectedDtos.get(2).getName(), buddiesConnected.get(2).getName());
     }
 
     @Test
@@ -190,11 +191,11 @@ public class PayMyBuddyServiceTest {
         assertTrue(resultat);
         List<Transaction> transactions = transactionRepository.findTransactionSendersByConnectionId(connectionId);
 
-        assertTrue(transactions.size() == nbTransaction + 1);
-        assertTrue(transactions.get(nbTransaction).getPmbAccountSender().getConnection().getConnectionId() == connectionId);
-        assertTrue(transactions.get(nbTransaction).getPmbAccountReceiver().getConnection().getConnectionId() == connectionReceiverId);
-        assertTrue(transactions.get(nbTransaction).getDescription().equals(description));
-        assertTrue(transactions.get(nbTransaction).getAmount() == amount);
+        assertEquals(transactions.size(), nbTransaction + 1);
+        assertEquals(transactions.get(nbTransaction).getPmbAccountSender().getConnection().getConnectionId(), connectionId);
+        assertEquals(transactions.get(nbTransaction).getPmbAccountReceiver().getConnection().getConnectionId(), connectionReceiverId);
+        assertEquals(transactions.get(nbTransaction).getDescription(), description);
+        assertEquals(transactions.get(nbTransaction).getAmount(), amount);
     }
 
     @Test
@@ -235,10 +236,10 @@ public class PayMyBuddyServiceTest {
 
         // ASSERT
         assertNotNull(profileDto);
-        assertTrue(profileDto.getConnectionId() == connectionId);
-        assertTrue(profileDto.getEmail().equals(connection.getEmail()));
-        assertTrue(profileDto.getPassword().equals(connection.getPassword()));
-        assertTrue(profileDto.getName().equals(connection.getName()));
+        assertEquals(profileDto.getConnectionId(), connectionId);
+        assertEquals(profileDto.getEmail(), connection.getEmail());
+        assertEquals(profileDto.getPassword(), connection.getPassword());
+        assertEquals(profileDto.getName(), connection.getName());
     }
 
     @Test
@@ -281,9 +282,9 @@ public class PayMyBuddyServiceTest {
         assertTrue(resultat);
 
         Connection connection = connectionRepository.findById(connectionId).get();
-        assertTrue(connection.getEmail().equals(newEmail));
-        assertTrue(connection.getPassword().equals(newPassword));
-        assertTrue(connection.getName().equals(newName));
+        assertEquals(connection.getEmail(), newEmail);
+        assertEquals(connection.getPassword(), newPassword);
+        assertEquals(connection.getName(), newName);
     }
 
     @Test

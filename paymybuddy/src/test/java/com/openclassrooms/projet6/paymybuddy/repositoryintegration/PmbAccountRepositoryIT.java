@@ -49,8 +49,8 @@ public class PmbAccountRepositoryIT {
         List<PmbAccount> pmbAccounts = pmbAccountRepository.findAll();
 
         // ASSERT
-        assertTrue(pmbAccounts.size() == 9);
-        assertTrue(pmbAccounts.get(idExistingConnection - 1).getBalance()==balanceExistingConnection);
+        assertEquals(pmbAccounts.size(), 9);
+        assertEquals(pmbAccounts.get(idExistingConnection - 1).getBalance(), balanceExistingConnection);
     }
 
     //*********************************************************************************************************
@@ -67,7 +67,7 @@ public class PmbAccountRepositoryIT {
 
         // ASSERT
         assertNotNull(pmbAccount);
-        assertTrue(pmbAccount.getBalance()== balanceExistingConnection);
+        assertEquals(pmbAccount.getBalance(), balanceExistingConnection);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PmbAccountRepositoryIT {
         int pmbAccountSavedId = pmbAccountSaved.getPmbAccountId();
         assertNotNull(pmbAccountSavedId);
         assertTrue(pmbAccountRepository.findById(pmbAccountSavedId).isPresent());
-        assertTrue(pmbAccountRepository.findAll().size() == nbPmbAccountInitial);
+        assertEquals(pmbAccountRepository.findAll().size(), nbPmbAccountInitial);
     }
 
     //*********************************************************************************************************
@@ -145,7 +145,7 @@ public class PmbAccountRepositoryIT {
         // ASSERT
         assertNotNull(pmbAccountSaved.getPmbAccountId());
 
-        assertTrue(pmbAccountSaved.getBalance() == newBalance);
+        assertEquals(pmbAccountSaved.getBalance(), newBalance);
 
         assertTrue(pmbAccountRepository.findById(pmbAccountSaved.getPmbAccountId()).isPresent());
     }

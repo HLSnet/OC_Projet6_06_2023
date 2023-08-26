@@ -56,9 +56,9 @@ public class TransactionRepositoryIT {
         List<Transaction> transactions = transactionRepository.findAll();
 
         // ASSERT
-        assertTrue(transactions.size() == 23);
-        assertTrue(transactions.get(idTransaction - 1).getAmount()== amount);
-        assertTrue(transactions.get(idTransaction - 1).getDescription().equals(description));
+        assertEquals(transactions.size(),23);
+        assertEquals(transactions.get(idTransaction - 1).getAmount(), amount);
+        assertEquals(transactions.get(idTransaction - 1).getDescription(), description);
     }
 
     //*********************************************************************************************************
@@ -77,8 +77,8 @@ public class TransactionRepositoryIT {
 
         // ASSERT
         assertNotNull(transaction);
-        assertTrue(transaction.getAmount()== amount);
-        assertTrue(transaction.getDescription().equals(description));
+        assertEquals(transaction.getAmount(), amount);
+        assertEquals(transaction.getDescription(), description);
     }
 
     @Test
@@ -152,8 +152,8 @@ public class TransactionRepositoryIT {
         List<Transaction> senderTransactions = transactionRepository.findTransactionSendersByConnectionId(senderConnectionId);
 
         // ASSERT
-        assertTrue(senderTransactions.get(0).getPmbAccountReceiver().getPmbAccountId() == 3);
-        assertTrue(senderTransactions.get(1).getPmbAccountReceiver().getPmbAccountId() == 4);
+        assertEquals(senderTransactions.get(0).getPmbAccountReceiver().getPmbAccountId(),3);
+        assertEquals(senderTransactions.get(1).getPmbAccountReceiver().getPmbAccountId(),4);
     }
 
     //*****************************************************************************************************************
@@ -168,8 +168,8 @@ public class TransactionRepositoryIT {
         List<Transaction> receiverTransactions = transactionRepository.findTransactionReceiversByConnectionId(senderConnectionId);
 
         // ASSERT
-        assertTrue(receiverTransactions.get(0).getPmbAccountSender().getPmbAccountId() == 1);
-        assertTrue(receiverTransactions.get(1).getPmbAccountSender().getPmbAccountId() == 9);
+        assertEquals(receiverTransactions.get(0).getPmbAccountSender().getPmbAccountId(), 1);
+        assertEquals(receiverTransactions.get(1).getPmbAccountSender().getPmbAccountId(), 9);
     }
 
     //*****************************************************************************************************************
@@ -184,12 +184,9 @@ public class TransactionRepositoryIT {
         List<Transaction> transactions = transactionRepository.findTransactionsByConnectionId(senderConnectionId);
 
         // ASSERT
-        assertTrue(transactions.get(0).getPmbAccountSender().getPmbAccountId() == 1);
-        assertTrue(transactions.get(1).getPmbAccountReceiver().getPmbAccountId() == 3);
-        assertTrue(transactions.get(2).getPmbAccountReceiver().getPmbAccountId() == 4);
-        assertTrue(transactions.get(3).getPmbAccountSender().getPmbAccountId() == 9);
+        assertEquals(transactions.get(0).getPmbAccountSender().getPmbAccountId(), 1);
+        assertEquals(transactions.get(1).getPmbAccountReceiver().getPmbAccountId(),3);
+        assertEquals(transactions.get(2).getPmbAccountReceiver().getPmbAccountId(),4);
+        assertEquals(transactions.get(3).getPmbAccountSender().getPmbAccountId(), 9);
     }
-
-
-
 }
