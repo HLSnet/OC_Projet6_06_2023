@@ -1,10 +1,7 @@
 package com.openclassrooms.projet6.paymybuddy.controller;
 
 
-import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
-import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
-import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
-import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.*;
 import com.openclassrooms.projet6.paymybuddy.security.CustomUserDetails;
 import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -99,19 +96,21 @@ public class PayMyBuddyController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<TransactionDto> transactionDtos = payMyBuddyService.getTransactions(customUserDetails.getConnectionId());
+        TransferDto transferDto = payMyBuddyService.getTransferPageInformations(customUserDetails.getConnectionId());
+
 
         int pageSize = 3;
-        int totalPages = (int) Math.ceil((double) transactionDtos.size() / pageSize);
+        int totalPages = (int) Math.ceil((double) transferDto.getTransactionDtos().size() / pageSize);
 
         int start = page * pageSize;
-        int end = Math.min(start + pageSize, transactionDtos.size());
+        int end = Math.min(start + pageSize, transferDto.getTransactionDtos().size());
 
-        List<TransactionDto> transactionsOnPage = transactionDtos.subList(start, end);
+        List<TransactionDto> transactionsOnPage = transferDto.getTransactionDtos().subList(start, end);
 
         model.addAttribute("transactionDtos", transactionsOnPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("buddyConnectedDtos", transferDto.getBuddyConnectedDtos());
 
         return "transfer";
     }
@@ -236,45 +235,45 @@ public class PayMyBuddyController {
     // This URL should return the list of transactions  related to a connection
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //http://localhost:8080/transactions?connectionId=<connectionId>
-    @GetMapping("/transactions")
-    public ResponseEntity<List<TransactionDto>> getTransactionsGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
-        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
-
-        List<TransactionDto> transactionDtos = payMyBuddyService.getTransactions(connectionId);
-
-
-        if (transactionDtos.isEmpty()) {
-            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
-            return ResponseEntity.noContent().build();
-        }
-        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), transactionDtos);
-
-
-
-        return ResponseEntity.ok(transactionDtos);
-    }
+//    @GetMapping("/transactions")
+//    public ResponseEntity<List<TransactionDto>> getTransactionsGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
+//
+//        List<TransactionDto> transactionDtos = payMyBuddyService.getTransactions(connectionId);
+//
+//
+//        if (transactionDtos.isEmpty()) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
+//            return ResponseEntity.noContent().build();
+//        }
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), transactionDtos);
+//
+//
+//
+//        return ResponseEntity.ok(transactionDtos);
+//    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // This URL should return the list of contacts (my buddies)  related to a connection
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // http://localhost:8080/buddies?connectionId=<connectionId>
-    @GetMapping("/buddies")
-    public ResponseEntity<List<BuddyConnectedDto>> getBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
-        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
-
-        List<BuddyConnectedDto> BuddyConnectedDtos = payMyBuddyService.getBuddiesConnected(connectionId);
-
-        if (BuddyConnectedDtos.isEmpty()) {
-            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
-            return ResponseEntity.noContent().build();
-        }
-        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ", request.getMethod(), BuddyConnectedDtos);
-
-
-        return ResponseEntity.ok(BuddyConnectedDtos);
-    }
-
-
+//    @GetMapping("/buddies")
+//    public ResponseEntity<List<BuddyConnectedDto>> getBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
+//
+//        List<BuddyConnectedDto> BuddyConnectedDtos = payMyBuddyService.getBuddiesConnected(connectionId);
+//
+//        if (BuddyConnectedDtos.isEmpty()) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
+//            return ResponseEntity.noContent().build();
+//        }
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ", request.getMethod(), BuddyConnectedDtos);
+//
+//
+//        return ResponseEntity.ok(BuddyConnectedDtos);
+//    }
+//
+//
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // This URL should add a contact (a buddy) to the list of contacts (buddies) related to a connection

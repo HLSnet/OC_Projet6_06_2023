@@ -1,9 +1,6 @@
 package com.openclassrooms.projet6.paymybuddy.service;
 
-import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
-import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
-import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
-import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.*;
 import com.openclassrooms.projet6.paymybuddy.model.Connection;
 import com.openclassrooms.projet6.paymybuddy.model.PmbAccount;
 import com.openclassrooms.projet6.paymybuddy.model.Transaction;
@@ -57,19 +54,16 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return homeDto;
     }
 
-    /**
-     * Gets a list of TransactionDto objects associated with the given connectionId.
-     *
-     * @param connectionId The ID of the Connection to retrieve the transactions for.
-     * @return A list of TransactionDto objects containing transaction details for the connectionId.
-     *         If no transactions are found, an empty list is returned.
-     */
+
+
+
     @Override
-    public List<TransactionDto> getTransactions(int connectionId) {
-        List<TransactionDto> transactionDtos = new ArrayList<>();
-        List<Transaction> transactions = transactionRepository.findTransactionReceiversByConnectionId(connectionId);
+    public TransferDto getTransferPageInformations(int connectionId) {
+        TransferDto transferDto = new TransferDto();
 
-
+        // Gets a list of TransactionDto objects associated with the given connectionId.
+        ArrayList<TransactionDto> transactionDtos = new ArrayList<>();
+        ArrayList<Transaction> transactions = transactionRepository.findTransactionReceiversByConnectionId(connectionId);
         if (!transactions.isEmpty()) {
             for (Transaction    transaction : transactions) {
                 TransactionDto transactionDto = new TransactionDto();
@@ -82,20 +76,9 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
                 transactionDtos.add(transactionDto);
             }
         }
-        return transactionDtos;
-    }
 
-    /**
-     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
-     *
-     * @param connectionId The ID of the Connection for which to retrieve the connected buddies.
-     * @return A list of BuddyConnectedDto objects containing information about the connected buddies.
-     *         If the Connection with the given connectionId is not found, an empty list is returned.
-     */
-    @Override
-    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
-        List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
-
+        // Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
+        ArrayList<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
         Optional<Connection> optConnection = connectionRepository.findById(connectionId);
         if (optConnection.isPresent()) {
             List<Connection> buddiesConnected = optConnection.get().getBuddiesConnected();
@@ -106,8 +89,64 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
                 buddiesConnectedDtos.add(buddiesConnectedDto);
             }
         }
-        return buddiesConnectedDtos;
+        transferDto.setBuddyConnectedDtos(buddiesConnectedDtos);
+        transferDto.setTransactionDtos(transactionDtos);
+
+        return transferDto;
     }
+
+
+//    /**
+//     * Gets a list of TransactionDto objects associated with the given connectionId.
+//     *
+//     * @param connectionId The ID of the Connection to retrieve the transactions for.
+//     * @return A list of TransactionDto objects containing transaction details for the connectionId.
+//     *         If no transactions are found, an empty list is returned.
+//     */
+//    @Override
+//    public List<TransactionDto> getTransactions(int connectionId) {
+//        List<TransactionDto> transactionDtos = new ArrayList<>();
+//        List<Transaction> transactions = transactionRepository.findTransactionReceiversByConnectionId(connectionId);
+//
+//
+//        if (!transactions.isEmpty()) {
+//            for (Transaction    transaction : transactions) {
+//                TransactionDto transactionDto = new TransactionDto();
+//
+//                int receiverConnectionId = transaction.getPmbAccountReceiver().getConnection().getConnectionId();
+//                transactionDto.setConnectionReceiverId(receiverConnectionId);
+//                transactionDto.setName(connectionRepository.findById(receiverConnectionId).get().getName());
+//                transactionDto.setDescription(transaction.getDescription());
+//                transactionDto.setAmount(transaction.getAmount());
+//                transactionDtos.add(transactionDto);
+//            }
+//        }
+//        return transactionDtos;
+//    }
+//
+//    /**
+//     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
+//     *
+//     * @param connectionId The ID of the Connection for which to retrieve the connected buddies.
+//     * @return A list of BuddyConnectedDto objects containing information about the connected buddies.
+//     *         If the Connection with the given connectionId is not found, an empty list is returned.
+//     */
+//    @Override
+//    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
+//        List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
+//
+//        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+//        if (optConnection.isPresent()) {
+//            List<Connection> buddiesConnected = optConnection.get().getBuddiesConnected();
+//            for (Connection connection : buddiesConnected) {
+//                BuddyConnectedDto buddiesConnectedDto = new BuddyConnectedDto();
+//                buddiesConnectedDto.setConnectionId(connection.getConnectionId());
+//                buddiesConnectedDto.setName(connection.getName());
+//                buddiesConnectedDtos.add(buddiesConnectedDto);
+//            }
+//        }
+//        return buddiesConnectedDtos;
+//    }
 
     /**
      * Adds a new buddy connection between the given connectionId and connectionBuddyId.

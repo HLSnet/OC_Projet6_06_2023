@@ -1,10 +1,7 @@
 package com.openclassrooms.projet6.paymybuddy.service;
 
 
-import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
-import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
-import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
-import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.*;
 
 
 import java.util.List;
@@ -12,8 +9,14 @@ import java.util.List;
 public interface PayMyBuddyService {
 
     public HomeDto getBalanceAccount(int connectionId);
-    public List<TransactionDto> getTransactions(int connectionId);
-    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId);
+
+    public TransferDto getTransferPageInformations(int connectionId);
+
+
+//    public List<TransactionDto> getTransactions(int connectionId);
+//    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId);
+
+
     public boolean addBuddyConnected(int connectionId, int  connectionBuddyId);
     public boolean addTransaction(int connectionId, TransactionDto transactionDto);
     public String getContact();
