@@ -135,7 +135,22 @@ public class PayMyBuddyController {
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/addConnection
+    @PostMapping("/addConnection")
+    public String addConnection(@NotNull HttpServletRequest request) {
 
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        System.out.println("ADD CONNECTION ...");
+
+        return "add-connection";
+    }
 
 
 

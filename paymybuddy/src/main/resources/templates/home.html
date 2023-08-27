@@ -6,20 +6,20 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
         <title>Pay My Buddy</title>
     </head>
     <body>
     <div class="container-fluid">
         <div class="row p-1">
-            <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;"> Pay My Buddy </label></div>
+            <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
             <div class="col-10  text-end">
-                <ul class="list-inline"></ul>
-                <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/home"> Home </a></li>
-                <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/transfer"> Transfer </a></li>
-                <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/profile"> Profile </a></li>
-                <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/contact"> Contact </a></li>
-                <li class="list-inline-item "><a class="text-decoration-none"  th:href="@{/logout}">Log off </a></li>
+                <ul class="list-inline ">
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/home"> Home </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-primary"  href="http://localhost:8080/transfer"> Transfer </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/profile"> Profile </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/contact"> Contact </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  th:href="@{/logout}">Log off </a></li>
                 </ul>
             </div>
         </div>
@@ -31,22 +31,21 @@
         <p>
             <label>
                 <b>Your balance : </b>
-<!--                <span th:text="${balanceAccount} + ' €'"></span>-->
-
-                <span th:text="${#numbers.formatInteger(balanceAccount, 0,'COMMA')} + '€'"></span>
+                <span th:text="${balanceAccount} + ' €'"></span>
+<!--                <span th:text="${#numbers.formatInteger(balanceAccount, 0,'COMMA')} + '€'"></span>-->
 
 
 
             </label>
         </p>
 
-        <div class="mt-5 border p-1 " style="background-color: rgba(108, 117, 125, 0.1);">
+        <div class="mt-5 bordureRouge p-1 " style="background-color: rgba(108, 117, 125, 0.1);">
 
             <form  method="post"  th:action="@{/toMyBank}" >
                 <div class="my-3 ">
                     <button class="btn btn-primary  "type="submit"  style="width: 175px;">Transfer to my bank</button>
-<!--                    <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
-                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+                    <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+<!--                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
                     <label > €</label>
                 </div>
             </form>
@@ -54,8 +53,8 @@
             <form  method="post"  th:action="@{fromMyBank}" >
                 <div class="my-3 ">
                     <button class="btn btn-primary  "type="submit"  style="width: 175px;">Credit from my bank</button>
-                    <!--                    <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
-                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+                    <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+<!--                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
                     <label > €</label>
                 </div>
             </form>

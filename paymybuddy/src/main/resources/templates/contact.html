@@ -10,21 +10,27 @@
         <title>Pay My Buddy</title>
     </head>
     <body>
-        <div class="container-fluid">
-            <div class="row p-1">
-                <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;"> Pay My Buddy </label></div>
-                <div class="col-10  text-end">
-                    <ul class="list-inline text-end"></ul>
-                    <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/home"> Home </a></li>
-                    <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/transfer"> Transfer </a></li>
-                    <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/profile"> Profile </a></li>
-                    <li class="list-inline-item "><a class="text-decoration-none"  href="http://localhost:8080/contact"> Contact </a></li>
-                    <li class="list-inline-item "><a class="text-decoration-none"  th:href="@{/logout}">Log off </a></li>
-                    </ul>
-                </div>
+    <div class="container-fluid">
+        <div class="row p-1">
+            <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
+            <div class="col-10  text-end">
+                <ul class="list-inline ">
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/home"> Home </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-primary"  href="http://localhost:8080/transfer"> Transfer </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/profile"> Profile </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/contact"> Contact </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  th:href="@{/logout}">Log off </a></li>
+                </ul>
+            </div>
+        </div>
+
+
+            <div class="mt-2 p-5" style="background-color: rgba(108, 117, 125, 0.1);">
+                <H5 th:text="${contact}"> </H5>
             </div>
 
-            <H3 th:text="${contact}"> </H3>
+
+
         </div>
 
         <!-- Optional JavaScript : Bootstrap Bundle with Popper -->
