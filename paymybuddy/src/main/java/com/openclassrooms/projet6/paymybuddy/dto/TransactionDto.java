@@ -6,7 +6,15 @@ public class TransactionDto {
     private int connectionReceiverId;
     private String name;
     private String description;
-    private float amount;
+    private int amount;
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
     public int getConnectionReceiverId() {
         return connectionReceiverId;
@@ -29,12 +37,8 @@ public class TransactionDto {
         this.description = description;
     }
 
-    public float getAmount() {
-        return amount;
-    }
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
+
+
 
     @Override
     public String toString() {

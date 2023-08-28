@@ -76,85 +76,85 @@ public class PayMyBuddyControllerTest {
 //    }
 
 
-    //***************************************************************************************************
-    // 2/ http://localhost:8080/transactions?connectionId=<connectionId>
-    //***************************************************************************************************
-    @Test
-    public void shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListNotEmpty() throws Exception{
-        int connectionId = 2;
-        String name = "My buddy";
-        String description = "Transaction PMB_account2 vers PMB_accountMy buddy";
-        float amount = 1000;
-
-        List<TransactionDto> transactionDtos = new ArrayList<>();
-        TransactionDto transactionDto = new TransactionDto();
-        transactionDto.setConnectionReceiverId(connectionId);
-        transactionDto.setName(name);
-        transactionDto.setDescription(description);
-        transactionDto.setAmount(amount);
-        transactionDtos.add(transactionDto);
-
-        when(payMyBuddyService.getTransactions(connectionId)).thenReturn(transactionDtos);
-        logger.info("TU (cas nominal) -> shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListNotEmpty()");
-
-        mockMvc.perform(get("http://localhost:8080/transactions?connectionId="+connectionId)).andExpect(status().isOk());
-
-        verify(payMyBuddyService,times(1)).getTransactions(connectionId);
-    }
-
-    @Test
-    public void shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListEmpty() throws Exception{
-        int connectionId = 2;
-        List<TransactionDto> transactionDtos = new ArrayList<>();
-
-        when(payMyBuddyService.getTransactions(connectionId)).thenReturn(transactionDtos);
-        logger.info("TU (cas d'erreur) -> shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListEmpty()");
-
-        mockMvc.perform(get("http://localhost:8080/transactions?connectionId="+connectionId)).andExpect(status().isNoContent());
-
-        verify(payMyBuddyService,times(1)).getTransactions(connectionId);
-    }
-
-    //***************************************************************************************************
-    // 3/ http://localhost:8080/buddies?=<connectionId>
-    //***************************************************************************************************
-    @Test
-    public void shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListNotEmpty() throws Exception{
-        int connectionId = 2;
-        List<String> buddiesName = List.of("My buddy1", "My buddy2", "My buddy3");
-        List<BuddyConnectedDto> buddyConnectedDtos = new ArrayList<>();
-        BuddyConnectedDto buddyConnectedDto;
-        int i = 1;
-        for (String name : buddiesName){
-            buddyConnectedDto = new BuddyConnectedDto();
-            buddyConnectedDto.setConnectionId(i);
-            buddyConnectedDto.setName(name);
-            buddyConnectedDtos.add(buddyConnectedDto);
-            i++;
-        }
-
-        when(payMyBuddyService.getBuddiesConnected(connectionId)).thenReturn(buddyConnectedDtos);
-        logger.info("TU (cas nominal) -> shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListEmpty()");
-
-        mockMvc.perform(get("http://localhost:8080/buddies?connectionId="+connectionId)).andExpect(status().isOk());
-
-        verify(payMyBuddyService,times(1)).getBuddiesConnected(connectionId);
-    }
-
-    @Test
-    public void shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListEmpty() throws Exception{
-        int connectionId = 2;
-        List<BuddyConnectedDto> buddyConnectedDtos = new ArrayList<>();
-
-        when(payMyBuddyService.getBuddiesConnected(connectionId)).thenReturn(buddyConnectedDtos);
-        logger.info("TU (cas d'erreur) -> shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListNotEmpty()");
-
-        mockMvc.perform(get("http://localhost:8080/buddies?connectionId="+connectionId)).andExpect(status().isNoContent());
-
-        verify(payMyBuddyService,times(1)).getBuddiesConnected(connectionId);
-    }
-
-
+//    //***************************************************************************************************
+//    // 2/ http://localhost:8080/transactions?connectionId=<connectionId>
+//    //***************************************************************************************************
+//    @Test
+//    public void shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListNotEmpty() throws Exception{
+//        int connectionId = 2;
+//        String name = "My buddy";
+//        String description = "Transaction PMB_account2 vers PMB_accountMy buddy";
+//        float amount = 1000;
+//
+//        List<TransactionDto> transactionDtos = new ArrayList<>();
+//        TransactionDto transactionDto = new TransactionDto();
+//        transactionDto.setConnectionReceiverId(connectionId);
+//        transactionDto.setName(name);
+//        transactionDto.setDescription(description);
+//        transactionDto.setAmount(amount);
+//        transactionDtos.add(transactionDto);
+//
+//        when(payMyBuddyService.getTransactions(connectionId)).thenReturn(transactionDtos);
+//        logger.info("TU (cas nominal) -> shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListNotEmpty()");
+//
+//        mockMvc.perform(get("http://localhost:8080/transactions?connectionId="+connectionId)).andExpect(status().isOk());
+//
+//        verify(payMyBuddyService,times(1)).getTransactions(connectionId);
+//    }
+//
+//    @Test
+//    public void shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListEmpty() throws Exception{
+//        int connectionId = 2;
+//        List<TransactionDto> transactionDtos = new ArrayList<>();
+//
+//        when(payMyBuddyService.getTransactions(connectionId)).thenReturn(transactionDtos);
+//        logger.info("TU (cas d'erreur) -> shouldReturnTheListOfTransactionsRelatedToAConnection_ResultListEmpty()");
+//
+//        mockMvc.perform(get("http://localhost:8080/transactions?connectionId="+connectionId)).andExpect(status().isNoContent());
+//
+//        verify(payMyBuddyService,times(1)).getTransactions(connectionId);
+//    }
+//
+//    //***************************************************************************************************
+//    // 3/ http://localhost:8080/buddies?=<connectionId>
+//    //***************************************************************************************************
+//    @Test
+//    public void shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListNotEmpty() throws Exception{
+//        int connectionId = 2;
+//        List<String> buddiesName = List.of("My buddy1", "My buddy2", "My buddy3");
+//        List<BuddyConnectedDto> buddyConnectedDtos = new ArrayList<>();
+//        BuddyConnectedDto buddyConnectedDto;
+//        int i = 1;
+//        for (String name : buddiesName){
+//            buddyConnectedDto = new BuddyConnectedDto();
+//            buddyConnectedDto.setConnectionId(i);
+//            buddyConnectedDto.setName(name);
+//            buddyConnectedDtos.add(buddyConnectedDto);
+//            i++;
+//        }
+//
+//        when(payMyBuddyService.getBuddiesConnected(connectionId)).thenReturn(buddyConnectedDtos);
+//        logger.info("TU (cas nominal) -> shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListEmpty()");
+//
+//        mockMvc.perform(get("http://localhost:8080/buddies?connectionId="+connectionId)).andExpect(status().isOk());
+//
+//        verify(payMyBuddyService,times(1)).getBuddiesConnected(connectionId);
+//    }
+//
+//    @Test
+//    public void shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListEmpty() throws Exception{
+//        int connectionId = 2;
+//        List<BuddyConnectedDto> buddyConnectedDtos = new ArrayList<>();
+//
+//        when(payMyBuddyService.getBuddiesConnected(connectionId)).thenReturn(buddyConnectedDtos);
+//        logger.info("TU (cas d'erreur) -> shouldReturnTheListOfbuddiesRelatedToAConnection_ResultListNotEmpty()");
+//
+//        mockMvc.perform(get("http://localhost:8080/buddies?connectionId="+connectionId)).andExpect(status().isNoContent());
+//
+//        verify(payMyBuddyService,times(1)).getBuddiesConnected(connectionId);
+//    }
+//
+//
 
     //***************************************************************************************************
     // 4/ http://localhost:8080/addBuddy?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>

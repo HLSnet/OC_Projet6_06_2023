@@ -111,6 +111,7 @@ public class PayMyBuddyController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("buddyConnectedDtos", transferDto.getBuddyConnectedDtos());
+        model.addAttribute("transaction", new TransactionDto());
 
         return "transfer";
     }
@@ -121,13 +122,20 @@ public class PayMyBuddyController {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //http://localhost:8080/addTransaction
     @PostMapping("/addTransaction")
-    public String addTransaction(@NotNull HttpServletRequest request) {
+    public String addTransaction(@NotNull HttpServletRequest request, @ModelAttribute TransactionDto transactionDto) {
+
 
         logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        System.out.println("ADD TRANSACTION ...");
+
+        boolean resultat = payMyBuddyService.addTransaction(customUserDetails.getConnectionId(), transactionDto);
+
+//        System.out.println("Id receiver : " + transactionDto.getConnectionReceiverId());
+//        System.out.println("Description : " + transactionDto.getDescription());
+//        System.out.println("Amount      : " + transactionDto.getAmount());
+
 
         return "redirect:/transfer";
     }

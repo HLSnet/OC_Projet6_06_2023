@@ -30,7 +30,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     private TransactionRepository transactionRepository;
 
 
-    
+
 
 
     /**
@@ -55,7 +55,16 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     }
 
 
-
+/**
+ * Retrieve the informations displayed on the transfer page for a given connection ID.
+ *
+ * This method retrieves a TransferDto object containing information about
+ * transactions and buddies connected to the specified connection ID.
+ *
+ * @param connectionId The ID of the connection for which to retrieve transfer page information.
+ * @return TransferDto containing a list of TransactionDto objects representing transactions
+ *         and a list of BuddyConnectedDto objects representing buddies connected to the specified connection ID.
+ */
 
     @Override
     public TransferDto getTransferPageInformations(int connectionId) {
@@ -72,7 +81,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
                 transactionDto.setConnectionReceiverId(receiverConnectionId);
                 transactionDto.setName(connectionRepository.findById(receiverConnectionId).get().getName());
                 transactionDto.setDescription(transaction.getDescription());
-                transactionDto.setAmount(transaction.getAmount());
+                transactionDto.setAmount((int)transaction.getAmount());
                 transactionDtos.add(transactionDto);
             }
         }
@@ -185,7 +194,8 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         Optional<Connection> optConnection = connectionRepository.findById(connectionId);
 
         if (optConnection.isPresent()) {
-            optConnection.get().addBuddyConnected(optConnection.get());
+            // Evolution : ajouter à la liste des connectors connectionId
+            // afin de gerer un affichage des transactions englobant en plus des débits les crédits
 
             Transaction newTransaction = new Transaction();
             newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());

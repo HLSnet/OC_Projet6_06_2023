@@ -99,6 +99,10 @@ public class Connection {
         this.buddiesConnector = buddiesConnector;
     }
 
+
+
+
+
     public void addBuddyConnected(Connection newBuddyConnected){
         buddiesConnected.add(newBuddyConnected);
         newBuddyConnected.getBuddiesConnector().add(this);
