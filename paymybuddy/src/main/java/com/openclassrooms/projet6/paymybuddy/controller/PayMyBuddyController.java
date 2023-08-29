@@ -164,7 +164,10 @@ public class PayMyBuddyController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        System.out.println("CONNECTION : " + email);
+        boolean resultat = payMyBuddyService.addBuddyConnected(customUserDetails.getConnectionId(), email);
+
+        if (resultat) { System.out.println("Email ajouté : " + email);}
+        else {System.out.println("Email inconnu : " + email);}
 
         return  "redirect:/transfer";
     }

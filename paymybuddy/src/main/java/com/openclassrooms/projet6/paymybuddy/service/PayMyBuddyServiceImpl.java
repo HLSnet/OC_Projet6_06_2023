@@ -190,23 +190,20 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     }
 
 
-
-
-
     /**
-     * Adds a new buddy connection between the given connectionId and connectionBuddyId.
+     * Adds a connection to the list of buddies connected for the given connection.
      *
-     * @param connectionId      The ID of the Connection to add the buddy connection for.
-     * @param connectionBuddyId The ID of the buddy Connection to be added as a buddy.
-     * @return True if the buddy connection was successfully added, False otherwise.
-     *         The method returns False if either the Connection with connectionId or connectionBuddyId is not found.
+     * @param connectionId The ID of the main connection.
+     * @param emailBuddy   The email of the buddy to be added as a connection.
+     * @return True if the buddy connection was added successfully, false otherwise.
      */
     @Override
-    public boolean addBuddyConnected(int connectionId, int  connectionBuddyId) {
+    public boolean addBuddyConnected(int connectionId, String emailBuddy) {
         boolean result = false;
+
         Optional<Connection> optConnection = connectionRepository.findById(connectionId);
         if (optConnection.isPresent()) {
-            Optional<Connection> optConnectionBuddyId = connectionRepository.findById(connectionBuddyId);
+            Optional<Connection> optConnectionBuddyId = connectionRepository.findByEmail(emailBuddy);
             if (optConnectionBuddyId.isPresent()) {
                 optConnection.get().addBuddyConnected(optConnectionBuddyId.get());
                 result = true;
