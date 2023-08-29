@@ -129,16 +129,11 @@ public class PayMyBuddyController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
         boolean resultat = payMyBuddyService.addTransaction(customUserDetails.getConnectionId(), transactionDto);
-
-//        System.out.println("Id receiver : " + transactionDto.getConnectionReceiverId());
-//        System.out.println("Description : " + transactionDto.getDescription());
-//        System.out.println("Amount      : " + transactionDto.getAmount());
-
 
         return "redirect:/transfer";
     }
+
 
 
 
@@ -146,18 +141,83 @@ public class PayMyBuddyController {
     // This URL
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/addConnection
-    @PostMapping("/addConnection")
+    @GetMapping("/addConnection")
     public String addConnection(@NotNull HttpServletRequest request) {
 
         logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        System.out.println("ADD CONNECTION ...");
 
-        return "add-connection";
+        return  "addConnection";
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/addConnection
+    @PostMapping("/addBuddy")
+    public String addConnection(@NotNull HttpServletRequest request,  @RequestParam("email")  String email) {
+
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        System.out.println("CONNECTION : " + email);
+
+        return  "redirect:/transfer";
+    }
+
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should add a contact (a buddy) to the list of contacts (buddies) related to a connection <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    // http://localhost:8080/addBuddy?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>
+//    @GetMapping("/addBuddy")
+//    public ResponseEntity<Void> addBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @RequestParam int connectionBuddyId, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
+//
+//        boolean result = payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId);
+//
+//        if (!result) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit : connection(s) non existantes", request.getMethod());
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
+//        return ResponseEntity.ok(null);
+//    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should return the list of contacts (my buddies)  related to a connection  <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // http://localhost:8080/buddies?connectionId=<connectionId>
+//    @GetMapping("/buddies")
+//    public ResponseEntity<List<BuddyConnectedDto>> getBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
+//
+//        List<BuddyConnectedDto> BuddyConnectedDtos = payMyBuddyService.getBuddiesConnected(connectionId);
+//
+//        if (BuddyConnectedDtos.isEmpty()) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
+//            return ResponseEntity.noContent().build();
+//        }
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ", request.getMethod(), BuddyConnectedDtos);
+//
+//
+//        return ResponseEntity.ok(BuddyConnectedDtos);
+//    }
+//
+//
+
 
 
 
@@ -187,15 +247,9 @@ public class PayMyBuddyController {
     }
 
 
-
-
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should update one's connection's profile
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should update one's connection's profile   <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //http://localhost:8080/updateProfile?connectionId=<connectionId>
 //    @PostMapping(value = "/profile")
 //    public ResponseEntity<Void> addPerson(@RequestBody ProfileDto profileDto, @NotNull HttpServletRequest request) {
@@ -234,79 +288,9 @@ public class PayMyBuddyController {
     }
 
 
-
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return the list of transactions  related to a connection
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/transactions?connectionId=<connectionId>
-//    @GetMapping("/transactions")
-//    public ResponseEntity<List<TransactionDto>> getTransactionsGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
-//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
-//
-//        List<TransactionDto> transactionDtos = payMyBuddyService.getTransactions(connectionId);
-//
-//
-//        if (transactionDtos.isEmpty()) {
-//            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
-//            return ResponseEntity.noContent().build();
-//        }
-//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), transactionDtos);
-//
-//
-//
-//        return ResponseEntity.ok(transactionDtos);
-//    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return the list of contacts (my buddies)  related to a connection
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // http://localhost:8080/buddies?connectionId=<connectionId>
-//    @GetMapping("/buddies")
-//    public ResponseEntity<List<BuddyConnectedDto>> getBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @NotNull HttpServletRequest request) {
-//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
-//
-//        List<BuddyConnectedDto> BuddyConnectedDtos = payMyBuddyService.getBuddiesConnected(connectionId);
-//
-//        if (BuddyConnectedDtos.isEmpty()) {
-//            logger.error(" Resultat de la requete {} en cours : statut = 204 No Content", request.getMethod());
-//            return ResponseEntity.noContent().build();
-//        }
-//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ", request.getMethod(), BuddyConnectedDtos);
-//
-//
-//        return ResponseEntity.ok(BuddyConnectedDtos);
-//    }
-//
-//
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should add a contact (a buddy) to the list of contacts (buddies) related to a connection
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // http://localhost:8080/addBuddy?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>
-    @GetMapping("/addBuddy")
-    public ResponseEntity<Void> addBuddiesConnectedGivenConnectionId(@RequestParam int connectionId, @RequestParam int connectionBuddyId, @NotNull HttpServletRequest request) {
-        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionId);
-
-        boolean result = payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId);
-
-        if (!result) {
-            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit : connection(s) non existantes", request.getMethod());
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
-        return ResponseEntity.ok(null);
-    }
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should add a transaction related to a connection (money sender)
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should add a transaction related to a connection (money sender)  <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    // http://localhost:8080/addTransaction?connectionBuddyId=<connectionBuddyId>
 //    @GetMapping("/addTransaction")
 //    public ResponseEntity<Void> addTransactionGivenConnectionId(@RequestParam int connectionBuddyId, @RequestBody TransactionDto transactionDto, @NotNull HttpServletRequest request) {
@@ -328,16 +312,6 @@ public class PayMyBuddyController {
 //
 //        return ResponseEntity.created(location).build();
 //    }
-//
-//
-//
-//
-
-
-
-
-
-
 
 
 }

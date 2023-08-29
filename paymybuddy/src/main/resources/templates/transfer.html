@@ -29,9 +29,7 @@
                 <div class="row ">
                     <div class="col-3 " >  <h5>Send Money</h5></div>
                     <div class="col-9  text-end">
-                        <form method="post" th:action="@{/addConnection}">
-                            <button class="btn btn-primary px-4" type="submit">Add Connection</button>
-                        </form>
+                        <a  class="bg-primary text-white   rounded text-center text-decoration-none px-3 py-2 " href="http://localhost:8080/addConnection"> Add Connection</a>
                     </div>
                     <div style="background-color: rgba(108, 117, 125, 0.1);color: #ffffff; ">
                         <form method="post" th:action="@{/addTransaction}"  th:object="${transaction}">
