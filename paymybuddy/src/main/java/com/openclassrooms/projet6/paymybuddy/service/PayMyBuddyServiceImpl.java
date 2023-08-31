@@ -61,7 +61,8 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
      * @param amountCredit The amount of credit to be added to the account balance.
      * @return True if the credit was successfully added, false otherwise (e.g., if the user does not exist or the credit would result in a negative balance).
      */
-    public boolean addToBalance(int connectionId, float amountCredit){
+    public boolean
+    addToBalance(int connectionId, float amountCredit){
         boolean result = false;
 
         Optional<PmbAccount> pmbAccount = pmbAccountRepository.findById(connectionId);
@@ -137,12 +138,19 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Override
     public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
         boolean result = false;
-        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+        // We retrieve the balance of the sender
+        float balanceSender = pmbAccountRepository.findByConnectionId(connectionId).get().getBalance();
 
-        if (optConnection.isPresent()) {
+        float amountWithWithdrawal =  transactionDto.getAmount() * (float) 1.005;
+
+        // Checking if the balance is enough (including the 0.5% Withdrawal)
+        if (balanceSender > amountWithWithdrawal) {
+            // We debit the sender's balance
+            pmbAccountRepository.findByConnectionId(connectionId).get().setBalance(balanceSender - amountWithWithdrawal);
+
+            Optional<Connection> optConnection = connectionRepository.findById(connectionId);
             // Evolution : ajouter à la liste des connectors connectionId
-            // afin de gerer un affichage des transactions englobant en plus des débits les crédits
-
+            // afin de gerer un affichage des transactions englobant les crédits (en plus des débits)
             Transaction newTransaction = new Transaction();
             newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());
             newTransaction.setPmbAccountReceiver(pmbAccountRepository.findByConnectionId(transactionDto.getConnectionReceiverId()).get());

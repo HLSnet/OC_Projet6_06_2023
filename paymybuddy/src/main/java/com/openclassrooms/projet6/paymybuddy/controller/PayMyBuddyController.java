@@ -52,7 +52,7 @@ public class PayMyBuddyController {
 
         model.addAttribute("balanceAccount", homeDto.getBalance());
         model.addAttribute("name", homeDto.getName());
-        model.addAttribute("amount", "0");
+        model.addAttribute("amount", "");
 
         return "home";
     }
@@ -76,9 +76,8 @@ public class PayMyBuddyController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        payMyBuddyService.addToBalance(customUserDetails.getConnectionId(), -1*amount);
-
-        return "redirect:/home";
+        boolean result = payMyBuddyService.addToBalance(customUserDetails.getConnectionId(), -1*amount);
+        return  (result)?  "redirect:/home" : "discardTransferBank";
     }
 
 
@@ -129,9 +128,9 @@ public class PayMyBuddyController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        boolean resultat = payMyBuddyService.addTransaction(customUserDetails.getConnectionId(), transactionDto);
+        boolean result = payMyBuddyService.addTransaction(customUserDetails.getConnectionId(), transactionDto);
 
-        return "redirect:/transfer";
+        return  (result)?  "redirect:/transfer" : "discardTransferBuddy";
     }
 
 
