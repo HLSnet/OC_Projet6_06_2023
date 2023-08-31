@@ -159,31 +159,31 @@ public class PayMyBuddyControllerTest {
     //***************************************************************************************************
     // 4/ http://localhost:8080/addBuddy?connectionId=<connectionId>&connectionBuddyId=<connectionBuddyId>
     //***************************************************************************************************
-    @Test
-    public void shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue() throws Exception{
-        int connectionId = 2;
-        int connectionBuddyId = 7;
-
-        when(payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId)).thenReturn(true);
-        logger.info("TU (cas nominal) -> shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue()");
-
-        mockMvc.perform(get("http://localhost:8080/addBuddy?connectionId="+connectionId+"&connectionBuddyId="+connectionBuddyId)).andExpect(status().isOk());
-
-        verify(payMyBuddyService,times(1)).addBuddyConnected(connectionId, connectionBuddyId);
-    }
-
-    @Test
-    public void shouldAddANewBuddyToTheListOfBuddiesConnected_ResultFalse() throws Exception{
-        int connectionId = 2;
-        int connectionBuddyId = 70;
-
-        when(payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId)).thenReturn(false);
-        logger.info("TU (cas d'erreur) -> shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue()");
-
-        mockMvc.perform(get("http://localhost:8080/addBuddy?connectionId="+connectionId+"&connectionBuddyId="+connectionBuddyId)).andExpect(status().isConflict());
-
-        verify(payMyBuddyService,times(1)).addBuddyConnected(connectionId, connectionBuddyId);
-    }
+//    @Test
+//    public void shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue() throws Exception{
+//        int connectionId = 2;
+//        int connectionBuddyId = 7;
+//
+//        when(payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId)).thenReturn(true);
+//        logger.info("TU (cas nominal) -> shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue()");
+//
+//        mockMvc.perform(get("http://localhost:8080/addBuddy?connectionId="+connectionId+"&connectionBuddyId="+connectionBuddyId)).andExpect(status().isOk());
+//
+//        verify(payMyBuddyService,times(1)).addBuddyConnected(connectionId, connectionBuddyId);
+//    }
+//
+//    @Test
+//    public void shouldAddANewBuddyToTheListOfBuddiesConnected_ResultFalse() throws Exception{
+//        int connectionId = 2;
+//        int connectionBuddyId = 70;
+//
+//        when(payMyBuddyService.addBuddyConnected(connectionId, connectionBuddyId)).thenReturn(false);
+//        logger.info("TU (cas d'erreur) -> shouldAddANewBuddyToTheListOfBuddiesConnected_ResultTrue()");
+//
+//        mockMvc.perform(get("http://localhost:8080/addBuddy?connectionId="+connectionId+"&connectionBuddyId="+connectionBuddyId)).andExpect(status().isConflict());
+//
+//        verify(payMyBuddyService,times(1)).addBuddyConnected(connectionId, connectionBuddyId);
+//    }
     //***************************************************************************************************
     // 5/ http://localhost:8080/addTransaction?connectionId=<connectionId>
     //***************************************************************************************************

@@ -1,53 +1,50 @@
 package com.openclassrooms.projet6.paymybuddy.controller;
 
 
+import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+    @Autowired
+    private PayMyBuddyService payMyBuddyService;
 
-
-
+    // http://localhost:8080/login
     @GetMapping("/login")
     public String loginForm(){
         return "login";
     }
 
 
-
+    // http://localhost:8080/registration
     @GetMapping("/registration")
     public String registrationForm() {
         return "registration";
     }
 
+
+    // http://localhost:8080/registration
     @PostMapping("/registration")
-    public String registration(){
-        return "redirect:/registration?success";
+    public String registration(@NotNull HttpServletRequest request,
+                               @RequestParam("username") String email,
+                               @RequestParam("name") String name,
+                               @RequestParam("password") String password) {
+
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
+
+        String url = "redirect:/registration?success";
+        if (! payMyBuddyService.registration(email, name, password)){
+            url= "redirect:/registration?error";
+        }
+        return url;
     }
-
-
-//    public String registration(
-//            @Valid @ModelAttribute("user") UserDto userDto,
-//            BindingResult result,
-//            Model model) {
-//        User existingUser = userService.findUserByEmail(userDto.getEmail());
-//
-//        if (existingUser != null)
-//            result.rejectValue("email", null,
-//                    "User already registered !!!");
-//
-//        if (result.hasErrors()) {
-//            model.addAttribute("user", userDto);
-//            return "/registration";
-//        }
-//
-//        userService.saveUser(userDto);
-//        return "redirect:/registration?success";
-//    }
 }

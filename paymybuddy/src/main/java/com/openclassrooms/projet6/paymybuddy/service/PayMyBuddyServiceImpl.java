@@ -29,7 +29,30 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Override
+    public boolean registration(String email, String name, String password) {
+        boolean result = false;
 
+        if (connectionRepository.findByEmail(email) != null ){
+            Connection connection = new Connection();
+            connection.setName(name);
+            connection.setEmail(email);
+            connection.setPassword(password);
+            connectionRepository.save(connection);
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Gets the contact information.
+     *
+     * @return The contact information as a string.
+     */
+    @Override
+    public String getContact() {
+        return COORDONNEES_CONTACT;
+    }
 
 
 
@@ -186,18 +209,6 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         return profileDto;
     }
 
-
-    /**
-     * Gets the contact information.
-     *
-     * @return The contact information as a string.
-     */
-    @Override
-    public String getContact() {
-        return COORDONNEES_CONTACT;
-    }
-
-
     /**
      * Adds a connection to the list of buddies connected for the given connection.
      *
@@ -245,10 +256,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
 //    }
 
 
-
-
-
-    //    /**
+//    /**
 //     * Gets a list of TransactionDto objects associated with the given connectionId.
 //     *
 //     * @param connectionId The ID of the Connection to retrieve the transactions for.
@@ -275,7 +283,8 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
 //        }
 //        return transactionDtos;
 //    }
-//
+
+
 //    /**
 //     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
 //     *

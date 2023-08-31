@@ -9,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -97,7 +95,6 @@ public class PayMyBuddyController {
 
         TransferDto transferDto = payMyBuddyService.getTransferPageInformations(customUserDetails.getConnectionId());
 
-
         int pageSize = 3;
         int totalPages = (int) Math.ceil((double) transferDto.getTransactionDtos().size() / pageSize);
 
@@ -123,7 +120,6 @@ public class PayMyBuddyController {
     @PostMapping("/addTransaction")
     public String addTransaction(@NotNull HttpServletRequest request, @ModelAttribute TransactionDto transactionDto) {
 
-
         logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -132,8 +128,6 @@ public class PayMyBuddyController {
 
         return  (result)?  "redirect:/transfer" : "discardTransferBuddy";
     }
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,9 +167,95 @@ public class PayMyBuddyController {
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should return one's connection's profile
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/profile
+    @GetMapping("/profile")
+    public String profile(@NotNull HttpServletRequest request, Model model) {
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        ProfileDto profileDto = payMyBuddyService.getProfile(customUserDetails.getConnectionId());
+
+        String name = profileDto.getName();
+        String email = profileDto.getEmail();
+        String password = "******";
+
+        model.addAttribute("name", name);
+        model.addAttribute("email", email);
+        model.addAttribute("password", password);
+
+        return "profile";
+    }
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should return the page of the PMB contact (in order to contact the PayMyBuddy company)
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/contact
+    @GetMapping("/contact")
+    public String contact(@NotNull HttpServletRequest request, Model model) {
+        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("contact", COORDONNEES_CONTACT);
+        return "contact";
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should update one's connection's profile   <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //http://localhost:8080/updateProfile?connectionId=<connectionId>
+//    @PostMapping(value = "/profile")
+//    public ResponseEntity<Void> addPerson(@RequestBody ProfileDto profileDto, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {} ressource a ajouter {}", request.getMethod(), request.getRequestURL(), profileDto);
+//
+//        if (!personDao.save(person)) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//        // On renvoie le code "201 Created" et l'URI vers la ressource créée dans le champ Location.
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{firstName}/{lastName}")
+//                .buildAndExpand(person.getFirstName() ,person.getLastName())
+//                .toUri();
+//
+//        logger.info(" Resultat de la requete {} en cours : statut =  201 Created ; URL = {}", request.getMethod(), location);
+//        return ResponseEntity.created(location).build();
+//
+//    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This URL should add a transaction related to a connection (money sender)  <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    // http://localhost:8080/addTransaction?connectionBuddyId=<connectionBuddyId>
+//    @GetMapping("/addTransaction")
+//    public ResponseEntity<Void> addTransactionGivenConnectionId(@RequestParam int connectionBuddyId, @RequestBody TransactionDto transactionDto, @NotNull HttpServletRequest request) {
+//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionBuddyId);
+//
+//        boolean result = payMyBuddyService.addTransaction(connectionBuddyId, transactionDto);
+//
+//        if (!result) {
+//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//
+//        logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
+//
+//
+//
+//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
+//
+//
+//        return ResponseEntity.created(location).build();
+//    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,103 +296,6 @@ public class PayMyBuddyController {
 //
 //
 //        return ResponseEntity.ok(BuddyConnectedDtos);
-//    }
-//
-//
-
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return one's connection's profile
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/profile
-    @GetMapping("/profile")
-    public String profile(@NotNull HttpServletRequest request, Model model) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
-        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        ProfileDto profileDto = payMyBuddyService.getProfile(customUserDetails.getConnectionId());
-
-        String name = profileDto.getName();
-        String email = profileDto.getEmail();
-        String password = "******";
-
-        model.addAttribute("name", name);
-        model.addAttribute("email", email);
-        model.addAttribute("password", password);
-
-        return "profile";
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should update one's connection's profile   <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/updateProfile?connectionId=<connectionId>
-//    @PostMapping(value = "/profile")
-//    public ResponseEntity<Void> addPerson(@RequestBody ProfileDto profileDto, @NotNull HttpServletRequest request) {
-//        logger.info(" Requete {} en cours : {} ressource a ajouter {}", request.getMethod(), request.getRequestURL(), profileDto);
-//
-//        if (!personDao.save(person)) {
-//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//        // On renvoie le code "201 Created" et l'URI vers la ressource créée dans le champ Location.
-//        URI location = ServletUriComponentsBuilder
-//                .fromCurrentRequest()
-//                .path("/{firstName}/{lastName}")
-//                .buildAndExpand(person.getFirstName() ,person.getLastName())
-//                .toUri();
-//
-//        logger.info(" Resultat de la requete {} en cours : statut =  201 Created ; URL = {}", request.getMethod(), location);
-//        return ResponseEntity.created(location).build();
-//
-//    }
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return the page of the PMB contact (in order to contact the PayMyBuddy company)
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/contact
-    @GetMapping("/contact")
-    public String contact(@NotNull HttpServletRequest request, Model model) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("contact", COORDONNEES_CONTACT);
-        return "contact";
-    }
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should add a transaction related to a connection (money sender)  <= A SUPPRIMER , APRES AVOIR ECRIT LES TEST CONTROLEUR (ANNCIENNE VERSION, CADUQUE)
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    // http://localhost:8080/addTransaction?connectionBuddyId=<connectionBuddyId>
-//    @GetMapping("/addTransaction")
-//    public ResponseEntity<Void> addTransactionGivenConnectionId(@RequestParam int connectionBuddyId, @RequestBody TransactionDto transactionDto, @NotNull HttpServletRequest request) {
-//        logger.info(" Requete {} en cours : {}?connectionId={}", request.getMethod(), request.getRequestURL(), connectionBuddyId);
-//
-//        boolean result = payMyBuddyService.addTransaction(connectionBuddyId, transactionDto);
-//
-//        if (!result) {
-//            logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//
-//        logger.error(" Resultat de la requete {} en cours : statut = 409 conflit la ressource existe deja", request.getMethod());
-//
-//
-//
-//        logger.info(" Resultat de la requete {} en cours : statut =  200 OK ; reponse = {}", request.getMethod(), result);
-//
-//
-//        return ResponseEntity.created(location).build();
 //    }
 
 

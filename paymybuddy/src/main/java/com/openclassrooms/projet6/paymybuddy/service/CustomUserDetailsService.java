@@ -5,7 +5,6 @@ import com.openclassrooms.projet6.paymybuddy.model.Connection;
 import com.openclassrooms.projet6.paymybuddy.repository.ConnectionRepository;
 import com.openclassrooms.projet6.paymybuddy.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

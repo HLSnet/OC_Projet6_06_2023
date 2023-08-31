@@ -22,7 +22,6 @@ public class SpringSecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
         )
-
         .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/registration/**").permitAll()
                 .anyRequest().authenticated()
@@ -38,10 +37,8 @@ public class SpringSecurityConfig {
                 .rememberMe()
                 .key("uniqueAndSecret")
                 .tokenValiditySeconds(604800);  // 7 * 24 * 60 * 60
-               
         return http.build();
     }
-
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
