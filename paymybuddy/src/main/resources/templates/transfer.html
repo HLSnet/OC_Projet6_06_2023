@@ -61,13 +61,12 @@
                     <tr th:each="transaction : ${transactionDtos}">
                         <td th:text="${transaction.name}">-</td>
                         <td th:text="${transaction.description}">-</td>
-    <!--                    <td th:text="${transaction.amount} + '€'">-</td>-->
                         <td th:text="${#numbers.formatInteger(transaction.amount, 0,'COMMA')} + '€'">-</td>
                     </tr>
                     </tbody>
                 </table>
 
-                <nav aria-label="Page navigation">
+                <nav th:if="${totalPages} > 1 " aria-label="Page navigation">
                     <ul class="pagination  justify-content-center ">
                         <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
                             <a class="page-link" th:href="@{/transfer(page=${currentPage - 1})}" aria-label="Previous">

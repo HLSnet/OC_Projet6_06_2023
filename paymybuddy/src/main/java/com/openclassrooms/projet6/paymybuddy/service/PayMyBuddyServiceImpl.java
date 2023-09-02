@@ -56,8 +56,8 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
             connection.setName(name);
             connection.setEmail(email);
             connection.setPassword(passwordEncoder.encode(password));
-//            PmbAccount pmbAccount = new PmbAccount();
-//            pmbAccount.saveConnection(connection);
+            PmbAccount pmbAccount = new PmbAccount();
+            pmbAccount.saveConnection(connection);
             connectionRepository.save(connection);
             result = true;
         }

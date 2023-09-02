@@ -41,10 +41,7 @@ public class LoginController {
 
         logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
 
-        String url = "redirect:/registration?success";
-        if (! payMyBuddyService.registration(email, name, password)){
-            url= "redirect:/registration?error";
-        }
-        return url;
+        return  (payMyBuddyService.registration(email, name, password))? "redirect:/registration?success" : "redirect:/registration?error";
+
     }
 }
