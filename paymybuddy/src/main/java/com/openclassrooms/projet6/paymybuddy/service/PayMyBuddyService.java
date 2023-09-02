@@ -15,8 +15,4 @@ public interface PayMyBuddyService {
     public boolean addBuddyConnected(int connectionId, String emailBuddy);
     public String getContact();
     public ProfileDto getProfile(int connectionId);
-
-//    public List<TransactionDto> getTransactions(int connectionId);
-//    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId);
-//    public boolean updateProfile(ProfileDto profileDto);
 }

@@ -36,7 +36,7 @@ public class SpringSecurityConfig {
                 )
                 .rememberMe()
                 .key("uniqueAndSecret")
-                .tokenValiditySeconds(604800);  // 7 * 24 * 60 * 60
+                .tokenValiditySeconds(604800);  // = (7 * 24 * 60 * 60) seconds = 7 days
         return http.build();
     }
 

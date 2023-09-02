@@ -19,26 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private ConnectionRepository connectionRepository;
 
-//    @Override
-//    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//
-//        Optional<Connection>   optConnection = connectionRepository.findByEmail(email);
-//
-//        if (optConnection == null) throw new UsernameNotFoundException("Invalid email");
-//
-//        Connection connection = optConnection.get();
-//
-//        CustomUserDetails userDetails = new() CustomUserDetails
-//                .withUsername(connection.getEmail())
-//                .password(connection.getPassword())
-//                .roles("user")
-//                .build()
-//                .
-//
-//        return userDetails;
-//    }
-
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Connection> optConnection = connectionRepository.findByEmail(email);
@@ -48,7 +28,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         // connection non null
         Connection connection = optConnection.get();
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(connection.getConnectionId(), connection.getEmail(), connection.getPassword(), new ArrayList<>());
+        CustomUserDetails customUserDetails = new CustomUserDetails(connection.getConnectionId(),
+                                                                    connection.getEmail(),
+                                                                    connection.getPassword(),
+                                                                    new ArrayList<>());
 
         return customUserDetails;
     }

@@ -9,6 +9,7 @@ import com.openclassrooms.projet6.paymybuddy.repository.PmbAccountRepository;
 import com.openclassrooms.projet6.paymybuddy.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,6 +30,23 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /**
+     * Registers a new user with the provided email, name, and password.
+     *
+     * This method checks if a user with the given email already exists in the database.
+     * If no user with the same email is found, a new connection (user) is created and
+     * saved to the database with the provided information.
+     *
+     * @param email    The email address of the user to register.
+     * @param name     The name of the user to register.
+     * @param password The password of the user to register.
+     *
+     * @return True if the registration is successful (i.e., no user with the same email
+     *         exists), false otherwise.
+     */
     @Override
     public boolean registration(String email, String name, String password) {
         boolean result = false;
@@ -37,7 +55,9 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
             Connection connection = new Connection();
             connection.setName(name);
             connection.setEmail(email);
-            connection.setPassword(password);
+            connection.setPassword(passwordEncoder.encode(password));
+//            PmbAccount pmbAccount = new PmbAccount();
+//            pmbAccount.saveConnection(connection);
             connectionRepository.save(connection);
             result = true;
         }
@@ -152,30 +172,36 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     /**
      * Adds a new transaction for the given connectionId using the details from the TransactionDto.
      *
-     * @param connectionId  The ID of the Connection to add the transaction for.
+     * @param connectionSenderId  The ID of the Connection to add the transaction for.
      * @param transactionDto The TransactionDto object containing transaction details.
      * @return True if the transaction was successfully added, False otherwise.
      *         The method returns False if the Connection with connectionId or the PmbAccount
      *         associated with connectionId or transactionDto.getConnectionReceiverId() is not found.
      */
     @Override
-    public boolean addTransaction(int connectionId, TransactionDto transactionDto) {
+    public boolean addTransaction(int connectionSenderId, TransactionDto transactionDto) {
         boolean result = false;
         // We retrieve the balance of the sender
-        float balanceSender = pmbAccountRepository.findByConnectionId(connectionId).get().getBalance();
+        float balanceSender = pmbAccountRepository.findByConnectionId(connectionSenderId).get().getBalance();
 
-        float amountWithWithdrawal =  transactionDto.getAmount() * (float) 1.005;
+        int ConnectionReceiverId = transactionDto.getConnectionReceiverId();
+        float balanceReceiver = pmbAccountRepository.findByConnectionId(ConnectionReceiverId).get().getBalance();
+
+        float amount =  transactionDto.getAmount();
+        float amountWithWithdrawal =  amount * (float) 1.005;
 
         // Checking if the balance is enough (including the 0.5% Withdrawal)
         if (balanceSender > amountWithWithdrawal) {
             // We debit the sender's balance
-            pmbAccountRepository.findByConnectionId(connectionId).get().setBalance(balanceSender - amountWithWithdrawal);
+            pmbAccountRepository.findByConnectionId(connectionSenderId).get().setBalance(balanceSender - amountWithWithdrawal);
+            // We credit the receiver's balance
+            pmbAccountRepository.findByConnectionId(ConnectionReceiverId).get().setBalance(balanceReceiver + amount);
 
-            Optional<Connection> optConnection = connectionRepository.findById(connectionId);
+            Optional<Connection> optConnection = connectionRepository.findById(connectionSenderId);
             // Evolution : ajouter à la liste des connectors connectionId
             // afin de gerer un affichage des transactions englobant les crédits (en plus des débits)
             Transaction newTransaction = new Transaction();
-            newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionId).get());
+            newTransaction.setPmbAccountSender(pmbAccountRepository.findByConnectionId(connectionSenderId).get());
             newTransaction.setPmbAccountReceiver(pmbAccountRepository.findByConnectionId(transactionDto.getConnectionReceiverId()).get());
             newTransaction.setAmount(transactionDto.getAmount());
             newTransaction.setDescription(transactionDto.getDescription());
@@ -230,83 +256,4 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
         }
         return result;
     }
-
-
-//    /**
-//     * Updates the profile information for the given ProfileDto.
-//     *
-//     * @param profileDto The ProfileDto containing the updated profile information.
-//     * @return True if the profile was successfully updated, False otherwise.
-//     *         The method returns False if the Connection with profileDto.getConnectionId()
-//     *         is not found.
-//     */
-//    @Override
-//    public boolean updateProfile(ProfileDto profileDto) {
-//        boolean result = false;
-//        Optional<Connection> optConnection = connectionRepository.findById(profileDto.getConnectionId());
-//
-//        if (optConnection.isPresent()) {
-//            optConnection.get().setEmail(profileDto.getEmail());
-//            optConnection.get().setPassword(profileDto.getPassword());
-//            optConnection.get().setName(profileDto.getName());
-//
-//            result = true;
-//        }
-//        return result;
-//    }
-
-
-//    /**
-//     * Gets a list of TransactionDto objects associated with the given connectionId.
-//     *
-//     * @param connectionId The ID of the Connection to retrieve the transactions for.
-//     * @return A list of TransactionDto objects containing transaction details for the connectionId.
-//     *         If no transactions are found, an empty list is returned.
-//     */
-//    @Override
-//    public List<TransactionDto> getTransactions(int connectionId) {
-//        List<TransactionDto> transactionDtos = new ArrayList<>();
-//        List<Transaction> transactions = transactionRepository.findTransactionReceiversByConnectionId(connectionId);
-//
-//
-//        if (!transactions.isEmpty()) {
-//            for (Transaction    transaction : transactions) {
-//                TransactionDto transactionDto = new TransactionDto();
-//
-//                int receiverConnectionId = transaction.getPmbAccountReceiver().getConnection().getConnectionId();
-//                transactionDto.setConnectionReceiverId(receiverConnectionId);
-//                transactionDto.setName(connectionRepository.findById(receiverConnectionId).get().getName());
-//                transactionDto.setDescription(transaction.getDescription());
-//                transactionDto.setAmount(transaction.getAmount());
-//                transactionDtos.add(transactionDto);
-//            }
-//        }
-//        return transactionDtos;
-//    }
-
-
-//    /**
-//     * Gets a list of BuddyConnectedDto objects representing the buddies connected to the given connectionId.
-//     *
-//     * @param connectionId The ID of the Connection for which to retrieve the connected buddies.
-//     * @return A list of BuddyConnectedDto objects containing information about the connected buddies.
-//     *         If the Connection with the given connectionId is not found, an empty list is returned.
-//     */
-//    @Override
-//    public List<BuddyConnectedDto> getBuddiesConnected(int connectionId) {
-//        List<BuddyConnectedDto> buddiesConnectedDtos = new ArrayList<>();
-//
-//        Optional<Connection> optConnection = connectionRepository.findById(connectionId);
-//        if (optConnection.isPresent()) {
-//            List<Connection> buddiesConnected = optConnection.get().getBuddiesConnected();
-//            for (Connection connection : buddiesConnected) {
-//                BuddyConnectedDto buddiesConnectedDto = new BuddyConnectedDto();
-//                buddiesConnectedDto.setConnectionId(connection.getConnectionId());
-//                buddiesConnectedDto.setName(connection.getName());
-//                buddiesConnectedDtos.add(buddiesConnectedDto);
-//            }
-//        }
-//        return buddiesConnectedDtos;
-//    }
-
 }

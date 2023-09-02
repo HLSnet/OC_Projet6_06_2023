@@ -1,9 +1,6 @@
 package com.openclassrooms.projet6.paymybuddy.servicetest;
 
-import com.openclassrooms.projet6.paymybuddy.dto.HomeDto;
-import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
-import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
-import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.*;
 import com.openclassrooms.projet6.paymybuddy.model.Connection;
 import com.openclassrooms.projet6.paymybuddy.model.Transaction;
 import com.openclassrooms.projet6.paymybuddy.repository.ConnectionRepository;
@@ -38,6 +35,19 @@ public class PayMyBuddyServiceTest {
     @Autowired
     PayMyBuddyService payMyBuddyServiceImpl;
 
+    //    public HomeDto getBalanceAccount(int connectionId);
+    //    public boolean addBuddyConnected(int connectionId, String emailBuddy);
+
+//
+//    public boolean registration(String email, String name, String password);
+
+//    public boolean addToBalance(int connectionId, float amountCredit);
+//    public TransferDto getTransferPageInformations(int connectionId);
+//    public boolean addTransaction(int connectionId, TransactionDto transactionDto);
+
+//    public String getContact();
+//    public ProfileDto getProfile(int connectionId);
+//
 
     //*********************************************************************************************************
     //  Tests unitaires de la méthode 'getBalanceAccount' de la classe  payMyBuddyServiceImpl
@@ -131,37 +141,39 @@ public class PayMyBuddyServiceTest {
 //        assertTrue(payMyBuddyServiceImpl.getBuddiesConnected(connectionId).isEmpty());
 //    }
 
-//    //*********************************************************************************************************
-//    //  Tests unitaires de la méthode 'addBuddyConnected' de la classe  payMyBuddyServiceImpl
-//    //*********************************************************************************************************
-//    @Test
-//    @Commit
-//    void testAddBuddyConnectedWithExistingConnectionId() {
-//        // ARRANGE
-//        int connectionId = 2;
-//        int connectionBuddyId = 7;
-//
-//        // ACT
-//        Boolean resultat = payMyBuddyServiceImpl.addBuddyConnected(connectionId, connectionBuddyId);
-//
-//        // ASSERT
-//        assertTrue(resultat);
-//        Connection connection = connectionRepository.findById(connectionId).get();
-//        Connection connectionBuddy = connectionRepository.findById(connectionBuddyId).get();
-//        assertTrue(connection.getBuddiesConnected().contains(connectionBuddy));
-//    }
-//
-//    @Test
-//    @Commit
-//    void testAddBuddyConnectedWithNonExistingConnectionId() {
-//        // ARRANGE
-//        int connectionId = 100;
-//        int connectionBuddyId = 7;
-//
-//        // ACT, ASSERT
-//        assertFalse(payMyBuddyServiceImpl.addBuddyConnected(connectionId, connectionBuddyId));
-//    }
-//
+
+    //    public boolean addBuddyConnected(int connectionId, String emailBuddy);
+    //*********************************************************************************************************
+    //  Tests unitaires de la méthode 'addBuddyConnected' de la classe  payMyBuddyServiceImpl
+    //*********************************************************************************************************
+    @Test
+    @Commit
+    void testAddBuddyConnectedWithExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 2;
+        String emailBuddy = "connection7@gmail.com";
+
+        // ACT
+        Boolean resultat = payMyBuddyServiceImpl.addBuddyConnected(connectionId, emailBuddy);
+
+        // ASSERT
+        assertTrue(resultat);
+        Connection connection = connectionRepository.findById(connectionId).get();
+        Connection connectionBuddy = connectionRepository.findByEmail(emailBuddy).get();
+        assertTrue(connection.getBuddiesConnected().contains(connectionBuddy));
+    }
+
+    @Test
+    @Commit
+    void testAddBuddyConnectedWithNonExistingConnectionId() {
+        // ARRANGE
+        int connectionId = 100;
+        String emailBuddy = "connection7@gmail.com";
+
+        // ACT, ASSERT
+        assertFalse(payMyBuddyServiceImpl.addBuddyConnected(connectionId, emailBuddy));
+    }
+
 
     //*********************************************************************************************************
     //  Tests unitaires de la méthode 'addTransaction' de la classe  payMyBuddyServiceImpl

@@ -15,8 +15,8 @@
             <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
             <div class="col-10  text-end">
                 <ul class="list-inline ">
-                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/home"> Home </a></li>
-                    <li class="list-inline-item "><a class="text-decoration-none text-primary"  href="http://localhost:8080/transfer"> Transfer </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-primary"  href="http://localhost:8080/home"> Home </a></li>
+                    <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/transfer"> Transfer </a></li>
                     <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/profile"> Profile </a></li>
                     <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/contact"> Contact </a></li>
                     <li class="list-inline-item "><a class="text-decoration-none text-dark"  th:href="@{/logout}">Log off </a></li>
@@ -45,7 +45,6 @@
                 <div class="my-3 ">
                     <button class="btn btn-primary  "type="submit"  style="width: 175px;">Transfer to my bank</button>
                     <input  type= "text" name="amount" th:value="${amount}"  style="width: 90px;" maxlength="10"/>
-<!--                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
                     <label > €</label>
                 </div>
             </form>
@@ -54,7 +53,6 @@
                 <div class="my-3 ">
                     <button class="btn btn-primary  "type="submit"  style="width: 175px;">Credit from my bank</button>
                     <input  type= "text" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
-<!--                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>-->
                     <label > €</label>
                 </div>
             </form>
