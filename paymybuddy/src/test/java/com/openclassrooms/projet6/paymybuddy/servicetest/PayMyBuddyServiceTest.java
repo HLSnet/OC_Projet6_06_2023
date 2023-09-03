@@ -184,7 +184,7 @@ public class PayMyBuddyServiceTest {
         }
     }
 
-    
+
 
     /**
      *  Tests unitaires de la méthode 'addTransaction' de la classe  payMyBuddyServiceImpl
