@@ -51,7 +51,7 @@ public class PayMyBuddyServiceImpl implements PayMyBuddyService{
     public boolean registration(String email, String name, String password) {
         boolean result = false;
 
-        if (connectionRepository.findByEmail(email) != null ){
+        if (connectionRepository.findByEmail(email).isEmpty()){
             Connection connection = new Connection();
             connection.setName(name);
             connection.setEmail(email);

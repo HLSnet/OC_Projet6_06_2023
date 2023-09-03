@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `paymybuddy_db_test`.`connection` ;
 CREATE TABLE IF NOT EXISTS `paymybuddy_db_test`.`connection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
@@ -117,16 +117,16 @@ USE `paymybuddy_db_test` ;
 LOCK TABLES connection WRITE;
 
 INSERT INTO connection (email, password, name)
-VALUES 
-('connection1_test@gmail.com', 'pwd1', 'buddy1'),
-('connection2_test@gmail.com', 'pwd2', 'buddy2'),
-('connection3_test@gmail.com', 'pwd3', 'buddy3'),
-('connection4_test@gmail.com', 'pwd4', 'buddy4'),
-('connection5_test@gmail.com', 'pwd5', 'buddy5'),
-('connection6_test@gmail.com', 'pwd6', 'buddy6'),
-('connection7_test@gmail.com', 'pwd7', 'buddy7'),
-('connection8_test@gmail.com', 'pwd8', 'buddy8'),
-('connection9_test@gmail.com', 'pwd9', 'buddy9');
+VALUES
+('connection1_test@gmail.com', '$2a$10$jYqV13DfH/asr4XDITZBQODicR91gxC/2ZODSltVGuEp1B0EJISzm', 'buddy1'),
+('connection2_test@gmail.com', '$2a$10$n1N9w5jajgRWEF95JRG9a.TyxIBoteGG0GiEc9cLpI4f.bAbUhQGm', 'buddy2'),
+('connection3_test@gmail.com', '$2a$10$SGBvnuGeeBW7vyAv3XJAa.lC/e/NNFxB91BUAlKpAumJYC/eW9XSm', 'buddy3'),
+('connection4_test@gmail.com', '$2a$10$Z8jBXmU4gx3ze/ukBgVehu7J62Y9RL4PtkmwmcVu4oAnidm47RIgC', 'buddy4'),
+('connection5_test@gmail.com', '$2a$10$Q/znkhejmMg1pTZ0fdnxUeQ/iQTNcSgSh4kqOVO9f3DGAWKlEkkuy', 'buddy5'),
+('connection6_test@gmail.com', '$2a$10$p.JIQWa6t3YyP5k4yYAnBetJDn80y5srHPv54KklCDhAF7MuAYyL2', 'buddy6'),
+('connection7_test@gmail.com', '$2a$10$zLI1kvitlTxAuy5/NlEdIeuuzcTS.0mzdit9UxbtrrY1QWn3gq7C6', 'buddy7'),
+('connection8_test@gmail.com', '$2a$10$xk6CHDJ7xEL.ryQaSL3w2edYRL9Hn4VAZpOrfrnPtVmibp6R6XEg6', 'buddy8'),
+('connection9_test@gmail.com', '$2a$10$uKehyEJ7dHB3Uq5tmgg7YuIcEo/CLou2jZc0eXVI0bjJbm6Qhby5W', 'buddy9');
 
 UNLOCK TABLES;
 

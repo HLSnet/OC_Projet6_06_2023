@@ -2,10 +2,11 @@ package com.openclassrooms.projet6.paymybuddy.controllertest;
 
 
 import com.openclassrooms.projet6.paymybuddy.controller.PayMyBuddyController;
-import com.openclassrooms.projet6.paymybuddy.dto.BuddyConnectedDto;
-import com.openclassrooms.projet6.paymybuddy.dto.ProfileDto;
-import com.openclassrooms.projet6.paymybuddy.dto.TransactionDto;
+import com.openclassrooms.projet6.paymybuddy.dto.*;
+import com.openclassrooms.projet6.paymybuddy.security.CustomUserDetails;
 import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.ArrayList;
@@ -34,6 +42,24 @@ public class PayMyBuddyControllerTest {
 
     @MockBean
     PayMyBuddyService payMyBuddyService;
+
+
+
+    // http://localhost:8080/home
+
+    // http://localhost:8080/fromMyBank
+
+    //http://localhost:8080/transfer
+
+    //http://localhost:8080/addTransaction
+
+    //http://localhost:8080/addConnection
+
+    //http://localhost:8080/profile
+
+    //http://localhost:8080/contact
+
+
 
 
     //***************************************************************************************************
