@@ -50,7 +50,7 @@ public class PayMyBuddyController {
 
         model.addAttribute("balanceAccount", homeDto.getBalance());
         model.addAttribute("name", homeDto.getName());
-        model.addAttribute("amount", "");
+        model.addAttribute("amount", "0");
 
         return "home";
     }

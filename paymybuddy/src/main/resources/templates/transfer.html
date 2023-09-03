@@ -12,7 +12,7 @@
     <body>
         <div class="container-fluid">
             <div class="row p-1">
-                <div class="col-2 mb-4 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
+                <div class="col-2  mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
                 <div class="col-10  text-end">
                     <ul class="list-inline ">
                     <li class="list-inline-item "><a class="text-decoration-none text-dark"  href="http://localhost:8080/home"> Home </a></li>
@@ -24,13 +24,18 @@
                 </div>
             </div>
 
-
+            <div class="p-2 mb-5" style="background-color: rgba(108, 117, 125, 0.1);">
+                <label class="text-primary me-2"> Home </label>
+                <label class="text-primary mx-2"> / </label>
+                <label class="text-secondary"> Transfer </label>
+            </div>
             <div class="container my-3">
                 <div class="row ">
                     <div class="col-3 " >  <h5>Send Money</h5></div>
                     <div class="col-9  text-end">
                         <a  class="bg-primary text-white   rounded text-center text-decoration-none px-3 py-2 " href="http://localhost:8080/addConnection"> Add Connection</a>
                     </div>
+                </div>
                     <div style="background-color: rgba(108, 117, 125, 0.1);color: #ffffff; ">
                         <form method="post" th:action="@{/addTransaction}"  th:object="${transaction}">
                             <div class="mb-2 p-5 d-flex justify-content-center align-items-center align-items-stretch">
@@ -39,12 +44,12 @@
                                     <option th:each="buddyConnectedDto : ${buddyConnectedDtos}" th:value="${buddyConnectedDto.connectionId}" th:text="${buddyConnectedDto.name}" ></option>
                                 </select>
                                 <input class="border-2 mx-2" type="text"    th:field="*{description}" style="width: 200px; "placeholder="Description "/>
-                                <input class="border-2 mx-2" type="number"  th:field="*{amount}"      style="width: 100px; text-align: right;" maxlength="10" placeholder="0€" min="0" />
-                                <button class="btn btn-primary border-0 mx-2" type="submit" style="width: 150px; background-color: #81bf50;">Pay</button>
+                                <input class="border-2 ms-2 me-1" type="number"  th:field="*{amount}"         style="width: 100px; text-align: right;" maxlength="10"  min="0" placeholder="0"/>
+                                <label  class="text-dark py-2 " > €</label>
+                                <button class="btn btn-primary border-0 mx-3" type="submit" style="width: 150px; background-color: #81bf50;">Pay</button>
                             </div>
                         </form>
                     </div>
-                </div>
             </div>
 
             <div class="container mt-5">

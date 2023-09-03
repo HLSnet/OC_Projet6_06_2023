@@ -11,8 +11,8 @@
     </head>
     <body>
     <div class="container-fluid">
-        <div class="row ">
-            <div class="col-2 mb-1 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
+        <div class="row p-1">
+            <div class="col-2 mt-1 " ><label class="px-3 py-2 text-white   rounded text-center" style="background-color: #81bf50;width: 140px;"> Pay My Buddy </label></div>
             <div class="col-10  text-end">
                 <ul class="list-inline ">
                     <li class="list-inline-item "><a class="text-decoration-none text-primary"  href="http://localhost:8080/home"> Home </a></li>
@@ -24,15 +24,9 @@
             </div>
         </div>
 
-
-
-
-        <div class="p-2" style="background-color: rgba(108, 117, 125, 0.1);">
-            <label class="text-decoration-none text-primary" > Home </label>
-<!--            <label  class="text-decoration-none text-dark> Transfer </label>-->
+        <div class="p-2 mb-5" style="background-color: rgba(108, 117, 125, 0.1);">
+            <label class="text-primary" > Home </label>
         </div>
-
-
 
         <p>
             <label th:text=" 'Hello, ' + ${name} " > </label>
@@ -42,17 +36,15 @@
             <label>
                 <b>Your balance : </b>
                 <span th:text="${balanceAccount} + ' €'"></span>
-
-
             </label>
         </p>
 
-        <div class="mt-5 bordureRouge p-1 " style="background-color: rgba(108, 117, 125, 0.1);">
+        <div class="mt-5 p-1 " style="background-color: rgba(108, 117, 125, 0.1);">
 
             <form  method="post"  th:action="@{/toMyBank}" >
                 <div class="my-3 ">
-                    <button class="btn btn-primary  "type="submit"  style="width: 175px;">Transfer to my bank</button>
-                    <input  type= "number" name="amount" th:value="${amount}" step="0.01" style="width: 90px;" maxlength="10"/>
+                    <button class="btn btn-primary" type="submit"  style="width: 175px;">Transfer to my bank</button>
+                    <input type= "number" name="amount" th:value="${amount}" min="0" step="0.01" style="width: 90px; text-align: right;" maxlength="10" />
                     <label > €</label>
                 </div>
             </form>
@@ -60,7 +52,7 @@
             <form  method="post"  th:action="@{fromMyBank}" >
                 <div class="my-3 ">
                     <button class="btn btn-primary  "type="submit"  style="width: 175px;">Credit from my bank</button>
-                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;" maxlength="10"/>
+                    <input  type= "number" name="amount" th:value="${amount}" min="0" style="width: 90px;text-align: right;" maxlength="10" />
                     <label > €</label>
                 </div>
             </form>
