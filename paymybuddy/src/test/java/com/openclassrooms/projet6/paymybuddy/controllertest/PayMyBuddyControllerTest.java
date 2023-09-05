@@ -4,6 +4,7 @@ package com.openclassrooms.projet6.paymybuddy.controllertest;
 import com.openclassrooms.projet6.paymybuddy.controller.PayMyBuddyController;
 import com.openclassrooms.projet6.paymybuddy.dto.*;
 import com.openclassrooms.projet6.paymybuddy.security.CustomUserDetails;
+import com.openclassrooms.projet6.paymybuddy.service.CustomUserDetailsService;
 import com.openclassrooms.projet6.paymybuddy.service.PayMyBuddyService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.openclassrooms.projet6.paymybuddy.constants.Constants.COORDONNEES_CONTACT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = PayMyBuddyController.class)
-@AutoConfigureMockMvc(addFilters = false) // Désactive les filtres de sécurité
+//@AutoConfigureMockMvc(addFilters = false) // Désactive les filtres de sécurité
 public class PayMyBuddyControllerTest {
     private static Logger logger = LoggerFactory.getLogger(PayMyBuddyControllerTest.class);
 
@@ -43,23 +47,11 @@ public class PayMyBuddyControllerTest {
     @MockBean
     PayMyBuddyService payMyBuddyService;
 
+    @MockBean
+    CustomUserDetails customUserDetails;
 
-
-    // http://localhost:8080/home
-
-    // http://localhost:8080/fromMyBank
-
-    //http://localhost:8080/transfer
-
-    //http://localhost:8080/addTransaction
-
-    //http://localhost:8080/addConnection
-
-    //http://localhost:8080/profile
-
-    //http://localhost:8080/contact
-
-
+    @MockBean
+    CustomUserDetailsService customUserDetailsService;
 
 
     //***************************************************************************************************
@@ -67,6 +59,102 @@ public class PayMyBuddyControllerTest {
     // Tests unitaires de la classe  PayMyBuddyController
     //***************************************************************************************************
     //***************************************************************************************************
+
+    //***************************************************************************************************
+    // 1/ http://localhost:8080/home
+    //***************************************************************************************************
+    //@WithMockUser(value = "connection2_test@gmail.com")
+//    @WithUserDetails(value="connection2_test@gmail.com", userDetailsServiceBeanName="customUserDetailsService")
+// //   @WithMockUser(value = "connection2@gmail.com", userDetailsServiceBeanName = "customUserDetailsService")
+//    @Test
+//    public void shouldReturnTheBalanceOfPayMyBuddyAccountRelatedToAConnection_ResultBalanceAccount() throws Exception{
+//        // Mock a springSecurity user
+//        CustomUserDetails customUserDetails = new CustomUserDetails(2,
+//                                                                    "connection2@gmail.com",
+//                                                                    "pwd2",
+//                                                                    new ArrayList<>());
+//
+//        // Mock a HomeDto object
+//        float balance = 200;
+//        String name = "buddy2";
+//        HomeDto homeDto = new HomeDto();
+//        homeDto.setName(name);
+//        homeDto.setBalance(balance);
+//
+//        // Configure the behavior of the customUserDetailsService mock
+//        when(customUserDetailsService.loadUserByUsername("connection2@gmail.com")).thenReturn(customUserDetails);
+//
+//        // Configure the behavior of the payMyBuddyService mock
+//        when(payMyBuddyService.getBalanceAccount(customUserDetails.getConnectionId())).thenReturn(homeDto);
+//
+//        mockMvc.perform(get("/home")).andExpect(status().isOk());
+//
+//        //verify(payMyBuddyService,times(1)).getBalanceAccount(customUserDetails.getConnectionId());
+//    }
+//
+
+    //***************************************************************************************************
+    // 2/ http://localhost:8080/fromMyBank
+    //***************************************************************************************************
+
+
+    //***************************************************************************************************
+    // 3/ http://localhost:8080/toMyBank
+    //***************************************************************************************************
+
+
+
+    //***************************************************************************************************
+    // 4/ http://localhost:8080/transfer
+    //***************************************************************************************************
+
+
+    //***************************************************************************************************
+    // 5/ http://localhost:8080/addTransaction
+    //***************************************************************************************************
+
+
+    //***************************************************************************************************
+    // 6/ http://localhost:8080/addConnection
+    //***************************************************************************************************
+    @WithMockUser(value = "connection2_test@gmail.com")
+    @Test
+    public void shouldReturnAddConnection() throws Exception{
+        mockMvc.perform(get("http://localhost:8080/addConnection")).
+                andExpect(status().isOk()).
+                andExpect(view().name("addConnection"));
+    }
+
+
+    //***************************************************************************************************
+    // 7/ http://localhost:8080/addBuddy
+    //***************************************************************************************************
+
+
+
+    //***************************************************************************************************
+    // 8/ http://localhost:8080/profile
+    //***************************************************************************************************
+
+
+
+    //***************************************************************************************************
+    // 9/ http://localhost:8080/contact
+    //***************************************************************************************************
+    @WithMockUser(value = "connection2_test@gmail.com")
+    @Test
+    public void shouldReturnContact() throws Exception{
+        mockMvc.perform(get("http://localhost:8080/contact")).
+                andExpect(status().isOk()).
+                andExpect(model().attributeExists("contact")).
+                andExpect(model().attribute("contact", COORDONNEES_CONTACT)).
+                andExpect(view().name("contact"));
+    }
+
+
+
+
+
 
     //***************************************************************************************************
     // 1/ http://localhost:8080/balanceAccount?connectionId=<connectionId>
@@ -214,43 +302,30 @@ public class PayMyBuddyControllerTest {
     // 5/ http://localhost:8080/addTransaction?connectionId=<connectionId>
     //***************************************************************************************************
 
-    //***************************************************************************************************
-    // 6/ http://localhost:8080/contact
-    //***************************************************************************************************
-    @Test
-    public void shouldReturnContact() throws Exception{
-
-        when(payMyBuddyService.getContact()).thenReturn(COORDONNEES_CONTACT);
-        logger.info("TU (cas nominal) -> shouldReturnContact()");
-
-        mockMvc.perform(get("http://localhost:8080/contact")).andExpect(status().isOk());
-
-        verify(payMyBuddyService,times(1)).getContact();
-    }
 
 
-    //***************************************************************************************************
+//    //***************************************************************************************************
     // 7/ http://localhost:8080/profile?connectionId=<connectionId>
     //***************************************************************************************************
-    @Test
-    public void shouldReturnTheProfileRelatedToAConnection_ResultNotNull() throws Exception{
-        int connectionId = 2;
-        String email= "connection2_test@gmail.com";
-        String password= "pwd2";
-        String name= "buddy2";
-        ProfileDto profileDto = new ProfileDto();
-        profileDto.setConnectionId(connectionId);
-        profileDto.setEmail(email);
-        profileDto.setPassword(password);
-        profileDto.setName(name);
-
-        when(payMyBuddyService.getProfile(connectionId)).thenReturn(profileDto);
-        logger.info("TU (cas nominal) -> shouldReturnTheProfileRelatedToAConnection_ResultNotNull()");
-
-        mockMvc.perform(get("http://localhost:8080/profile?connectionId="+connectionId)).andExpect(status().isOk());
-
-        verify(payMyBuddyService,times(1)).getProfile(connectionId);
-    }
+//    @Test
+//    public void shouldReturnTheProfileRelatedToAConnection_ResultNotNull() throws Exception{
+//        int connectionId = 2;
+//        String email= "connection2_test@gmail.com";
+//        String password= "pwd2";
+//        String name= "buddy2";
+//        ProfileDto profileDto = new ProfileDto();
+//        profileDto.setConnectionId(connectionId);
+//        profileDto.setEmail(email);
+//        profileDto.setPassword(password);
+//        profileDto.setName(name);
+//
+//        when(payMyBuddyService.getProfile(connectionId)).thenReturn(profileDto);
+//        logger.info("TU (cas nominal) -> shouldReturnTheProfileRelatedToAConnection_ResultNotNull()");
+//
+//        mockMvc.perform(get("http://localhost:8080/profile?connectionId="+connectionId)).andExpect(status().isOk());
+//
+//        verify(payMyBuddyService,times(1)).getProfile(connectionId);
+//    }
 
 
 }

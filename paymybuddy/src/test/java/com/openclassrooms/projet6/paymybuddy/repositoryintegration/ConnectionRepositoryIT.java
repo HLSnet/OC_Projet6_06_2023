@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -37,6 +38,8 @@ public class ConnectionRepositoryIT {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @BeforeAll
@@ -59,7 +62,7 @@ public class ConnectionRepositoryIT {
         // ASSERT
         assertEquals(connections.size(), 9);
         assertEquals(connections.get(1).getEmail(),email);
-        assertEquals(connections.get(1).getPassword(), password);
+        assertTrue(passwordEncoder.matches(password, connections.get(1).getPassword()));
     }
 
     //*********************************************************************************************************
@@ -81,7 +84,7 @@ public class ConnectionRepositoryIT {
         // ASSERT
         assertNotNull(connection);
         assertEquals(connection.getEmail(), emailExistingConnection);
-        assertEquals(connection.getPassword(), passwordExistingConnection);
+        assertTrue(passwordEncoder.matches(passwordExistingConnection, connection.getPassword()));
         assertEquals(connection.getName(), nameExistingConnection);
 
         List<Connection> buddiesConnected = connection.getBuddiesConnected();
@@ -123,7 +126,7 @@ public class ConnectionRepositoryIT {
         // ASSERT
         assertNotNull(connection);
         assertEquals(connection.getConnectionId(), idExistingConnection);
-        assertEquals(connection.getPassword(), passwordExistingConnection);
+        assertTrue(passwordEncoder.matches(passwordExistingConnection, connection.getPassword()));
     }
     @Test
     void testFindByEmailANonExistingConnection() {

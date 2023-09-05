@@ -32,6 +32,9 @@ public class CustomUserDetails implements UserDetails {
         return connectionId;
     }
 
+    public void setConnectionId(int connectionId) {
+        this.connectionId = connectionId;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,17 +32,14 @@ public class PayMyBuddyController {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // 1/ http://localhost:8080/home
+    //
     // This URL should return the home page once one is authentified
     //
     // the home page contains the balance information of one's PayMyBuddy account
-    //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // http://localhost:8080/home
     @GetMapping("/home")
-    public String home(@NotNull HttpServletRequest request, Model model) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String home(Model model) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         HomeDto homeDto = payMyBuddyService.getBalanceAccount(customUserDetails.getConnectionId());
@@ -51,15 +47,18 @@ public class PayMyBuddyController {
         model.addAttribute("balanceAccount", homeDto.getBalance());
         model.addAttribute("name", homeDto.getName());
         model.addAttribute("amount", "0");
-
         return "home";
     }
 
-    // http://localhost:8080/fromMyBank
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // 2/ http://localhost:8080/fromMyBank
+    //
+    // This URL should return
+    //
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("/fromMyBank")
-    public String fromMyBank(@NotNull HttpServletRequest request, @RequestParam("amount") float amount) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String fromMyBank(@RequestParam("amount") float amount) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         payMyBuddyService.addToBalance(customUserDetails.getConnectionId(), amount);
@@ -67,30 +66,30 @@ public class PayMyBuddyController {
         return "redirect:/home";
     }
 
-    // http://localhost:8080/toMyBank
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // 3/ http://localhost:8080/toMyBank
+    //
+    // This URL should return
+    //
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("/toMyBank")
-    public String toMyBank(@NotNull HttpServletRequest request, @RequestParam("amount") float amount) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String toMyBank(@RequestParam("amount") float amount) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         boolean result = payMyBuddyService.addToBalance(customUserDetails.getConnectionId(), -1*amount);
         return  (result)?  "redirect:/home" : "discardTransferBank";
     }
 
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return the page dealing with transfer
+    // 4/ http://localhost:8080/transfer
+    //
+    // This URL should return
+    //
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/transfer
     @GetMapping("/transfer")
-    public String transfer(@NotNull HttpServletRequest request, Model model,
-    @RequestParam(value = "page", defaultValue = "0") int page) {
-
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String transfer(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         TransferDto transferDto = payMyBuddyService.getTransferPageInformations(customUserDetails.getConnectionId());
@@ -108,15 +107,16 @@ public class PayMyBuddyController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("buddyConnectedDtos", transferDto.getBuddyConnectedDtos());
         model.addAttribute("transaction", new TransactionDto());
-
         return "transfer";
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL
+    // 5/ http://localhost:8080/addTransaction
+    //
+    // This URL should return
+    //
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/addTransaction
     @PostMapping("/addTransaction")
     public String addTransaction(@NotNull HttpServletRequest request, @ModelAttribute TransactionDto transactionDto) {
 
@@ -131,30 +131,26 @@ public class PayMyBuddyController {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL
+    // 6/ http://localhost:8080/addConnection
+    //
+    // This URL should return the page addConnection.html
+    //
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @GetMapping("/addConnection")
-    public String addConnection(@NotNull HttpServletRequest request) {
-
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
-        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
+    public String addConnection() {
         return  "addConnection";
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL
+    // 7/ http://localhost:8080/addBuddy
+    //
+    // This URL should return
+    //
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/addConnection
     @PostMapping("/addBuddy")
-    public String addConnection(@NotNull HttpServletRequest request,  @RequestParam("email")  String email) {
-
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String addConnection(@RequestParam("email")  String email) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         boolean resultat = payMyBuddyService.addBuddyConnected(customUserDetails.getConnectionId(), email);
@@ -165,17 +161,15 @@ public class PayMyBuddyController {
         return  "redirect:/transfer";
     }
 
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // This URL should return one's connection's profile
+    // 8/ http://localhost:8080/profile
+    //
+    // This URL should return
+    //
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/profile
     @GetMapping("/profile")
-    public String profile(@NotNull HttpServletRequest request, Model model) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
+    public String profile(Model model) {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         ProfileDto profileDto = payMyBuddyService.getProfile(customUserDetails.getConnectionId());
@@ -187,21 +181,18 @@ public class PayMyBuddyController {
         model.addAttribute("name", name);
         model.addAttribute("email", email);
         model.addAttribute("password", password);
-
         return "profile";
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // 9/ http://localhost:8080/contact
+    //
     // This URL should return the page of the PMB contact (in order to contact the PayMyBuddy company)
     //
+    //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //http://localhost:8080/contact
     @GetMapping("/contact")
-    public String contact(@NotNull HttpServletRequest request, Model model) {
-        logger.info(" Requete {} en cours : {}", request.getMethod(), request.getRequestURL());
-
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public String contact(Model model) {
         model.addAttribute("contact", COORDONNEES_CONTACT);
         return "contact";
     }
